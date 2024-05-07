@@ -1,6 +1,6 @@
 # Setup Labeling Interface
 
-Make sure you install Docker & Docker Compose [Installation](https://docs.docker.com/compose/install/).
+Make sure you install Docker & Docker Compose ([Installation](https://docs.docker.com/compose/install/)).
 
 Navigate into your local labeling interface folder and execute the following commands:
 > docker build -t dis18_arts .
