@@ -9,4 +9,4 @@ Navigate into your local labeling interface folder and execute the following com
 
 Now you can attach with your IDE (we would recommend VS Code) to the container ([Attaching with VS Code](https://code.visualstudio.com/docs/devcontainers/attach-container)).
 
-Run `streamlit run labeling_interface` to start your local instance of the labeling interface server.
+Run `streamlit run rating_interface.py` to start your local instance of the labeling interface server.
