@@ -15,6 +15,9 @@ Navigate into your local labeling interface folder and execute the following com
 
 Now you can attach with your IDE (we would recommend VS Code) to the docker container ([Attaching with VS Code](https://code.visualstudio.com/docs/devcontainers/attach-container)).
 
+Once you are attached, select the path “/workspace” as the folder in which you are working. You should then see the files located in the “./src” folder on the host on the left-hand side of the VS Code explorer.
+
 ## Rating interface
+Open a terminal in VS Code and navigate to the folder where the file rating_interface.py is located.
 
 Run `streamlit run rating_interface.py` to start your local instance of the labeling interface server.
