@@ -58,7 +58,7 @@ def _update_history(winner):
     :param winner: id of the NON-CLICKED item by the user
     """
 
-    system_time = datetime.now().strftime("%H:%M:%S")
+    system_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     st.session_state['history'][st.session_state['current_match_id']] = ((st.session_state['can_a'], st.session_state['can_b']), st.session_state[f'can_{winner}'], system_time)
     st.session_state['current_match_id'] +=1
     if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
