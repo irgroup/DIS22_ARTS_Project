@@ -58,7 +58,7 @@ def _update_history(winner):
     :param winner: id of the NON-CLICKED item by the user
     """
 
-    system_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    system_time = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
     st.session_state['history'][st.session_state['current_match_id']] = ((st.session_state['can_a'], st.session_state['can_b']), st.session_state[f'can_{winner}'], system_time)
     st.session_state['current_match_id'] +=1
     if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
@@ -89,6 +89,24 @@ def _save_history():
     history_path = f"/workspace/histories/{st.session_state['name']}-{st.session_state['ds_version']}_history.pkl"
     pickle.dump(st.session_state['history'], open(history_path, "wb"))
 
+def _sign_up():
+    """
+    Opening the Sign-Up formular, to registrate a new User
+    """
+    #Other option for the user registration 
+    #@st.experimental_dialog("Cast your vote")
+    
+    #with st.sidebar.popover("User Registration"):
+
+    with st.form("my_form"):
+        st.markdown("Please enter your user details")
+        st.text_input("Enter Username", key="test_username")
+        st.text_input("Enter Password", key="test_password",type='password')
+        st.text_input("Repeat your password", key="test_password_re",type='password')
+        st.number_input("Enter your Age", step=1)
+        
+        submitted = st.form_submit_button("Submit")
+    
 
 
 if "name" in st.session_state:
@@ -126,7 +144,18 @@ else:
     st.session_state['ds_version'] = st.sidebar.selectbox('Select a dataset', ds_names).split("_")[-1]
 
     st.sidebar.text_input("Username", key="login_name")
+
+    #type="password" to show input as *****
+    st.sidebar.text_input("Enter Password", key="login_password", type="password")
+
     st.sidebar.button("Login", on_click=_login)
+
+    #Starts sign-up process 
+    st.sidebar.button("Sign-Up", on_click=_sign_up, key="sign_up_button")
+    
+#Debug
+if "test_username" in st.session_state:
+    st.write("Current Username is", st.session_state["test_username"])
 
 
 
