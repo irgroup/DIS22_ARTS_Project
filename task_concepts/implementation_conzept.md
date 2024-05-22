@@ -41,9 +41,15 @@
     - Wie funktioniert die Auswertung von diesen?
         - Username, TextID, Lückentext/Wissenabfrage Ergebnis (csv?)
 
+
 ### Konfidenzintervall/Likert-Skala ###
 - Als neuer Key am Dictionary bzw. als neue Column an der .csv Datei:
     - Werte zwischen.... (Absprache mit Gruppe)
+    - Skala wird aussehen (research based): "stimme sehr zu", "stimme eher zu", "teils-teils", "stimme eher nicht zu" und "stimme überhaupt nicht zu" → dadurch eindimensionale Likert-Skala (Quelle: https://www.ssoar.info/ssoar/handle/document/20886)
+- Skala wird mit Schieberegler hinterlegt werden 
+- zusätzlich kann diese farbig angepasst werden, nur aufpassen, hierdurch keinen bias zu geben 
+- Skala ist grundlegend implementiert, muss aber noch auf jeder Seite/bei jeder Frage neu initialisiert werden 
+- Implementation eines Weiter-Buttons, damit erst nach Auswahl des Textes und der Likert-Skala zur nächsten Frage gesprungen werden kann
 
 ### Reihenfolge der Text-Pairings ###
 - Wie wird die Text-Pairing Reihenfolge bestimmt?
