@@ -67,6 +67,16 @@ ________________________________________________________________________________
 Kappa, Krippendorf Alpha?
 __________________________________________________________________________________________
 __________________________________________________________________________________________
+
+### Kontakt ###
 Marvin Weihrauch 
 Email: marvin_benedikt.weihrauch@smail.th-koeln.de
 Matrikelnummer: 11154518
+
+Viktoria Hellmann
+Email: 
+Matrikelnummer:
+
+Zoe Bartz
+Email: 
+Matrikelnummer:
