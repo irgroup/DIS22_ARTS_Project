@@ -82,6 +82,7 @@ def _get_new_pair(winner="init"):
     st.session_state['can_a'],  st.session_state['can_b'] = st.session_state['determined_pairs'][st.session_state['current_match_id']]
     _save_history()
 
+
 def _save_history():
     """
     Current history is dumped.
@@ -119,7 +120,7 @@ if "name" in st.session_state:
     else:
         st.header('Click on the text which is easier to understand', divider='rainbow')
 
-    
+
     #Build Interface
     tab1, tab2 = st.columns(2)
     i_a, i_b = st.session_state['can_a'], st.session_state['can_b']
@@ -134,6 +135,12 @@ if "name" in st.session_state:
 
     with tab2:
         st.button(can_b_text, key="b_can_b", on_click=_get_new_pair, args=("a",))
+
+
+    def _likert():
+
+        slider = st.slider("Entscheide",0,1, 2)
+    _likert()
 
 else:
     #User is not logged in yet
