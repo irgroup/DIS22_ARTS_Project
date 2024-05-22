@@ -1,7 +1,5 @@
 # Konzept DIS22_ARTS_Project Antwortdauer_&_Simplizität (Quantitativ)
 
-# Konzept DIS22_ARTS_Project Antwortdauer_&_Simplizität (Quantitativ)
-
 ## Textmerkmale vs. Benutzerverhalten
 
 ### Textlänge vs. Einfachheit:
