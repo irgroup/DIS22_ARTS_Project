@@ -1,8 +1,9 @@
-version: "3"
 services:
 
   arts:
     image: dis18_arts
+    ports:
+      - "8501:8501"
     volumes: 
         - ./src:/workspace
         
