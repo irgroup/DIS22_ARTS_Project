@@ -55,6 +55,13 @@
 - Wie wird die Text-Pairing Reihenfolge bestimmt?
     - Abhängig von Englischlevel/Kenntnisstand etc.?
     - TextID1, TextID2?
+
+### Design
+- Lesbarkeit der Fragen durch Anpassen der Text- und Hintergrundfarben verbessern
+- "Click on the text which is easier to understand" Überschrift mit Fokus auf easier
+- Slider von der linken Seite auf die rechte Seite der Übersicht ziehen
+- Möglicherweise mit Farbablauf von grün nach Rot
+- Startseite/Übersichtseite: Anmeldefunktion kommt in die Mitte.
 __________________________________________________________________________________________
 __________________________________________________________________________________________
 
@@ -80,9 +87,9 @@ Email: marvin_benedikt.weihrauch@smail.th-koeln.de
 Matrikelnummer: 11154518
 
 Viktoria Hellmann
-Email: 
-Matrikelnummer:
+Email: viktoria_dora_lotte.hellmann@smail.th-koeln.de
+Matrikelnummer: 11154077
 
 Zoe Bartz
-Email: 
-Matrikelnummer:
+Email: zoe_bernadette.bartz@smail.th-koeln.de
+Matrikelnummer: 11153679
