@@ -43,4 +43,8 @@ $\alpha > 0,8$ ist eine perfekte Übereinstimmung zwischen den Beurteilern
 
 Mithilfe von Streamlit kann der Klick aufgezeichnet werden als einfach interpretiert werden und der nicht ausgewählte Text als schwer. Die Daten können in einer Dataframe umgewandelt werden und mithilfe von [Scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html) oder [Statsmodel](https://www.statsmodels.org/dev/generated/statsmodels.stats.inter_rater.fleiss_kappa.html) bewertet werden.
 
-Im Rahmen des Prozesses erfolgt keine Nutzung des ELO-Systems, da die Komplexität des Vorhabens einen Vergleich aller Kombinationen von Texten erforderlich machen würde.
+Im Rahmen des Prozesses erfolgt keine Nutzung des ELO-Systems, da die Komplexität des Vorhabens einen Vergleich aller Kombinationen von Texten erforderlich machen würde.^
+
+---
+
+Arthur Ndiema, 11153672 arthur-muanza.ndiema@smail.th-koeln.de
