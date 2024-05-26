@@ -207,7 +207,7 @@ else:
     # Check if the signup_form Formular was submitted
     if 'FormSubmitter:signup_form-Submit' in st.session_state:
         if st.session_state['FormSubmitter:signup_form-Submit']:
-            save_success = save_user_profile()
+            save_user_profile()
 
 
 
