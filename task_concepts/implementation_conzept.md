@@ -50,13 +50,14 @@
 - zusätzlich kann diese farbig angepasst werden, nur aufpassen, hierdurch keinen bias zu geben 
 - Skala ist grundlegend implementiert, muss aber noch auf jeder Seite/bei jeder Frage neu initialisiert werden 
 - Implementation eines Weiter-Buttons, damit erst nach Auswahl des Textes und der Likert-Skala zur nächsten Frage gesprungen werden kann
+- Ich bin mir sicher, dass der linke/rechte Text einfacher ist + Unsicher
 
 ### Reihenfolge der Text-Pairings ###
 - Wie wird die Text-Pairing Reihenfolge bestimmt?
     - Abhängig von Englischlevel/Kenntnisstand etc.?
     - TextID1, TextID2?
 
-### Design
+### Design ###
 - Lesbarkeit der Fragen durch Anpassen der Text- und Hintergrundfarben verbessern
 - "Click on the text which is easier to understand" Überschrift mit Fokus auf easier
 - Slider von der linken Seite auf die rechte Seite der Übersicht ziehen
@@ -65,7 +66,7 @@
 __________________________________________________________________________________________
 __________________________________________________________________________________________
 
-### Optionale logging Möglichkeiten
+### Optionale logging Möglichkeiten ###
 - Um Mouse-Events zu tracken, müsste man um das Streamlit-Framework herum programmieren, daher sehr aufwendig:
     - [mouseover Event](https://www.w3schools.com/jsref/event_onmouseover.asp)
     - [mousemove Event](https://www.w3schools.com/jsref/event_onmousemove.asp)
@@ -73,6 +74,19 @@ ________________________________________________________________________________
     - [Mouse behavioral patterns and keystroke dynamics in End-User
     Development: What can they tell us about users’ behavioral attributes?](https://doi.org/10.1016/j.chb.2018.02.012)
 - Klassische Logging values: Mögliche Fehlermeldungen/Application Errors oder Debug Messages?
+__________________________________________________________________________________________
+__________________________________________________________________________________________
+### Zeitplan ###
+
+- Themen Grundgerüst fertig (Viki + Zoe):
+  - Konfidenzintervall/Likert-Skala bis 30.05 (Viki + Zoe)
+  - Weiter Button 30.05 (Viki)
+  - Design (UI) 30.05 (Viki + Zoe) (nicht der Hauptfokus)
+- Nach Rücksprache mit Björn (Termin noch nicht bekannt): weitere Feinheiten
+
+- Themen fertig (Marvin):
+  - Logger
+  - ...
 __________________________________________________________________________________________
 __________________________________________________________________________________________
 ### Breich für Fragen und Notizen von anderen Gruppen ###
