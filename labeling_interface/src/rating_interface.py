@@ -145,15 +145,14 @@ def _likert():
                 '''
         st.markdown(css, unsafe_allow_html=True)
 
-        # Creating a dictionary to store the rating from the slider
-        # Definieren der Optionen für den Slider
+        # Defining options for slider
         options = [
             "I'm sure the left text is more simple",
             "Both texts are actually the same",
             "I'm sure the right text is more simple"
         ]
 
-        # Slider erstellen
+        # Create slider
         simplicity_rating = st.select_slider(
             "How do you rate the simplicity of the texts?",
             options=options,
@@ -161,7 +160,7 @@ def _likert():
             key="simplicity_slider"
         )
 
-        # Ergebnis in einem Dictionary speichern
+        # Save results in dictionary
         ratings = {
             "Simplicity Rating": simplicity_rating
         }
