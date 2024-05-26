@@ -6,6 +6,8 @@ from utils import Text, handle_scores, apply_history
 import os
 from datetime import datetime
 import glob
+import json
+import os.path
 
 def _login():
     """
@@ -97,14 +99,56 @@ def _sign_up():
     """
     Opening the Sign-Up form to register a new user.
     """
-    with st.form("my_form"):
+    with st.form("signup_form", border=True):
         st.markdown("Please enter your user details")
-        st.text_input("Enter Username", key="test_username")
-        st.text_input("Enter Password", key="test_password", type='password')
-        st.text_input("Repeat your password", key="test_password_re", type='password')
-        st.number_input("Enter your Age", step=1)
+        st.text_input("Enter Username", key="_username")
         
-        submitted = st.form_submit_button("Submit")
+        # To Do: Check if both password inputs are the same
+        st.text_input("Enter Password", key="_password", type='password')
+        st.text_input("Repeat your password", key="_password_re", type='password')
+
+        st.selectbox("Gender", ("Male", "Female", "Diverse"), key="_gender")
+        st.selectbox("English Level", ("B1.1","B1.2","B2.1", "B2.2", "C1.1", "C1.2", "C2.1", "C2.2"), key="_english_level")
+        st.number_input("Enter your Age", step=1, key="_age")
+
+        # To Do: Knowledge of Text-Subjects like Biology, Gaming etc. maybe as Slider(0-100) or 0/1 Checkbox
+
+        # Submit Button
+        st.form_submit_button("Submit")
+
+
+def save_user_profile():
+    """
+    Saves the user details after Submitting the signup formular
+    """
+    # To Do: Validate if all Inputs are complete
+
+    # Hashing the passwort before saving it as JSON
+    if "_password" in st.session_state:
+        hashed_password = hash(st.session_state["_password"])
+
+    # Check/Validate Inputs before? Does the user already exist?
+    temp_userprofile = {
+        "username":st.session_state["_username"],
+        "password":hashed_password,
+        "gender":st.session_state["_gender"],
+        "english_level":st.session_state["_english_level"],
+        "age":st.session_state["_age"]
+    }
+
+    # Building filepath
+    my_file_path = f'/workspace/data/userprofiles/{temp_userprofile["username"]}.json'
+
+    # One JSON file per User, bcs it could lead to problems, when all Clients want to write to the same JSON file
+    if not os.path.isfile(my_file_path):
+        with open(my_file_path, 'w', encoding='utf-8') as f:
+            json.dump(temp_userprofile, f, ensure_ascii=False, indent=4)
+        #If the file is created, Sign-Up was successful
+        if os.path.isfile(my_file_path):
+            st.success('Sign-Up was successful', icon="✅")
+    else:
+        st.error(f'A user with this username: {temp_userprofile["username"]} already exists', icon="🚨")
+
 
 if "name" in st.session_state:
     # User is already logged in
@@ -154,14 +198,18 @@ else:
     # type="password" to show input as *****
     st.sidebar.text_input("Enter Password", key="login_password", type="password")
 
+    # Button-click starts login process
     st.sidebar.button("Login", on_click=_login)
 
-    # Starts sign-up process 
+    # Button click starts sign-up process 
     st.sidebar.button("Sign-Up", on_click=_sign_up, key="sign_up_button")
 
-# Debug
-if "test_username" in st.session_state:
-    st.write("Current Username is", st.session_state["test_username"])
+    # Check if the signup_form Formular was submitted
+    if 'FormSubmitter:signup_form-Submit' in st.session_state:
+        if st.session_state['FormSubmitter:signup_form-Submit']:
+            save_success = save_user_profile()
+
+
 
 # Defining the simplicity guideline
 st.sidebar.subheader("Simplicity:")
