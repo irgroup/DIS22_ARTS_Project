@@ -18,26 +18,23 @@ Die Ergebnisse werden wertvolle Erkenntnisse darüber liefern, welche Faktoren d
         3. **Gruppenvergleich:** Vergleichen des Interrater-Agreement zwischen den beiden Gruppen mit einem geeigneten statistischen Mittel.
     - **Python:** `scipy.stats`, `scikit-learn`, `pandas`, `spaCy`
     - **Ziel:** Untersuchen, ob die Textgattung einen Einfluss auf die Übereinstimmung der Rater bei der Bewertung der Textkomplexität hat.
-
 ---
 
-1. **Korreliert das Sprachniveau der Rater mit der Übereinstimmung mit dem Goldstandard?**
+2. **Korreliert das Sprachniveau der Rater mit der Übereinstimmung mit dem Goldstandard?**
     - **Methode:** Spearman-Rangkorrelation, Kendall-Tau-Korrelation
     - **Vorgehensweise:** Berechnung der Korrelation zwischen Sprachniveau (ordinal) und Übereinstimmung mit Goldstandard.
     - **Python:** `scipy.stats`, `pandas`
     - **Ziel:** Untersuchung des Einflusses des Sprachniveaus.
+---
     
-    ---
-    
-2. **Gibt es bestimmte Textmerkmale (z.B. Länge, Satzkomplexität, Wortfrequenz), die das Interrater-Agreement beeinflussen?**
+3. **Gibt es bestimmte Textmerkmale (z.B. Länge, Satzkomplexität, Wortfrequenz), die das Interrater-Agreement beeinflussen?**
     - **Methode:** Regression (linear, logistisch), Entscheidungsbäume
     - **Vorgehensweise:** Extraktion von Textmerkmalen mit SpaCy. Modellierung der Beziehung zwischen Merkmalen und Übereinstimmung.
     - **Python:** `spaCy`, `scikit-learn`
     - **Ziel:** Identifizierung prädiktiver Textmerkmale.
-
 ---
 
-1. **Forschungsfrage: Vergleich der Interrater-Übereinstimmung zwischen Studierenden und Experten**
+4. **Forschungsfrage: Vergleich der Interrater-Übereinstimmung zwischen Studierenden und Experten**
     
     Forschungsplan:
     
@@ -45,10 +42,9 @@ Die Ergebnisse werden wertvolle Erkenntnisse darüber liefern, welche Faktoren d
     - **Vorgehensweise:** Anwendung von Fleiss' Kappa für Gruppenbewertungen, um die Übereinstimmung innerhalb und zwischen den Gruppen zu messen.
     - **Python:** `Statsmodels` oder `scikit-learn`
     - **Ziel:** Ermittlung, ob die Expertise einen Effekt auf die Bewertungskonstanz besitzt.
-
 ---
 
-1. **Verändert sich das Interrater-Agreement im Laufe der Zeit? Werden die Rater im Laufe des Experiments konsistenter oder weniger konsistent in ihren Bewertungen?**
+5. **Verändert sich das Interrater-Agreement im Laufe der Zeit? Werden die Rater im Laufe des Experiments konsistenter oder weniger konsistent in ihren Bewertungen?**
     - **Methode:** Zeitreihenanalyse
     - **Vorgehensweise:**
         1. Analysieren der Zeit zwischen jeder Entscheidung, welche aus dem jeweiligen Rater entnommen werden kann
@@ -57,3 +53,6 @@ Die Ergebnisse werden wertvolle Erkenntnisse darüber liefern, welche Faktoren d
         4. Optional: Interrater nach jedem Step wird berechnet
     - **Python:** `pandas`, `statsmodels`, `plotly`
     - **Ziel:** Untersuchen, ob sich die Übereinstimmung der Rater im Laufe des Experiments verändert besonders zwischen Gruppen.
+  
+   ---
+   Arthur-Muanza Ndiema, 11153672 
