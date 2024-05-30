@@ -65,7 +65,7 @@ def _login():
     If yes, history is loaded.
     If not, a new history dictionary is instantiated.
 
-    Executes _init() afterwards.
+    Executes _init() afterward.
     """
     st.session_state['name'] = st.session_state["login_name"]
     history_path = f"/workspace/histories/{st.session_state['name']}-{st.session_state['ds_version']}_history.pkl"
@@ -100,6 +100,7 @@ def _init():
     st.session_state['can_a'], st.session_state['can_b'] = st.session_state['determined_pairs'][st.session_state['current_match_id']]
     st.session_state['selection_made'] = False  # Initialize selection state
     st.session_state['likert_made'] = False  # Initialize likert scale state
+    st.session_state['likert_made'] = {} # Initialize likert scale values
 
 def _update_history(winner):
     """
@@ -111,7 +112,8 @@ def _update_history(winner):
     st.session_state['history'][st.session_state['current_match_id']] = (
         (st.session_state['can_a'], st.session_state['can_b']),
         st.session_state[f'can_{winner}'],
-        system_time
+        system_time,
+        st.session_state['likert_values'].get(st.session_state['current_match_id'], {}) # Include likert value in history
     )
 
     if winner == 'a':
@@ -120,6 +122,7 @@ def _update_history(winner):
         handle_scores(st.session_state['texts'][st.session_state['can_b']], st.session_state['texts'][st.session_state['can_a']])
 
     st.session_state['selection_made'] = True  # Update selection state
+    st.session_state['likert_made'] = False # reset likert scala state
 
 def _get_new_pair():
     """
@@ -253,6 +256,15 @@ def _get_new_pair_and_reset_slider():
     # Reset the slider to the default value
     st.session_state.simplicity_slider = "Both texts are actually the same"
 
+
+# For storing the selected likert value as an integer
+# Mapping of textual labels to numerical values
+label_to_value = {
+    "I'm sure the left text is simpler": 0,
+    "Both texts are actually the same": 1,
+    "I'm sure the right text is simpler": 2
+}
+
 # likert scala
 def _likert():
     # Create a container
@@ -348,11 +360,11 @@ def _likert():
             format_func=lambda x: f"{x}",
             key="simplicity_slider"
         )
+        # Get the numerical value corresponding to the selected label
+        selected_value = label_to_value[simplicity_rating]
 
         # Save results in dictionary
-        ratings = {
-            "Simplicity Rating": simplicity_rating
-        }
+        ratings = {selected_value}
 
     # Save the ratings to session state
     if 'likert_values' not in st.session_state:
@@ -363,6 +375,8 @@ def _likert():
 
     # Indicate that the likert scale rating has been made
     st.session_state['likert_made'] = True
+    history = st.session_state['likert_values'].get(st.session_state['current_match_id'], {})
+
 
 # Defining the simplicity guideline
 def _simplicity_guideline():
@@ -373,8 +387,6 @@ def _simplicity_guideline():
     st.sidebar.markdown("* can you understand more quickly?")
     st.sidebar.markdown("* are you more confident to answer questions about?")
     st.sidebar.markdown("* is easier for you to reformulate without changing the meaning?")
-
-
 
 if "name" in st.session_state:
     # User is already logged in
@@ -436,3 +448,7 @@ else:
     if 'FormSubmitter:signup_form-Submit' in st.session_state:
         if st.session_state['FormSubmitter:signup_form-Submit']:
             save_user_profile()
+
+
+
+#
