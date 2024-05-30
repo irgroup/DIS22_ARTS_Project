@@ -6,6 +6,8 @@ from utils import Text, handle_scores, apply_history
 import os
 from datetime import datetime
 import glob
+import json
+import os.path
 
 def _login():
     """
@@ -42,14 +44,14 @@ def _init():
     st.session_state['determined_pairs'] = pickle.load(open(det_pairs_path, "rb"))
 
     if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
-        # Case when the user already finished labeling the dataset and logs in 
+        # Case when the user already finished labeling the dataset and logs in
         st.session_state['current_match_id'] = len(st.session_state['determined_pairs']) - 1
         st.write("Congratulations! You are done labeling the dataset! :partying_face:")
 
     st.session_state['can_a'], st.session_state['can_b'] = st.session_state['determined_pairs'][st.session_state['current_match_id']]
     st.session_state['selection_made'] = False  # Initialize selection state
     st.session_state['likert_made'] = False  # Initialize likert scale state
-    st.session_state['likert_values'] = {}  # Initialize likert scale values
+
 def _update_history(winner):
     """
     Updates and saves the history: time stamp, candidates, winner are added to the history dictionary.
@@ -60,15 +62,8 @@ def _update_history(winner):
     st.session_state['history'][st.session_state['current_match_id']] = (
         (st.session_state['can_a'], st.session_state['can_b']),
         st.session_state[f'can_{winner}'],
-        system_time,
-        st.session_state['likert_values'].get(st.session_state['current_match_id'], {}) # Include likert values in history
+        system_time
     )
-    st.session_state['current_match_id'] += 1
-    if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
-        # user finished labeling
-        _save_history()
-        st.session_state['current_match_id'] = len(st.session_state['determined_pairs']) - 1
-        st.write("Congratulations! You are done labeling the dataset! :partying_face:")
 
     if winner == 'a':
         handle_scores(st.session_state['texts'][st.session_state['can_a']], st.session_state['texts'][st.session_state['can_b']])
@@ -76,13 +71,20 @@ def _update_history(winner):
         handle_scores(st.session_state['texts'][st.session_state['can_b']], st.session_state['texts'][st.session_state['can_a']])
 
     st.session_state['selection_made'] = True  # Update selection state
-    st.session_state['likert_made'] = False  # Reset likert scale state
 
 def _get_new_pair():
     """
     Function is applied after every user decision.
     Sets next candidate pair to the current session state and saves history.
     """
+    st.session_state['current_match_id'] += 1
+    if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
+        # user finished labeling
+        _save_history()
+        st.session_state['current_match_id'] = len(st.session_state['determined_pairs']) - 1
+        st.write("Congratulations! You are done labeling the dataset! :partying_face:")
+
+
     st.session_state['selection_made'] = False  # Reset selection state
     st.session_state['likert_made'] = False  # Reset likert scale state
     st.session_state['can_a'], st.session_state['can_b'] = st.session_state['determined_pairs'][st.session_state['current_match_id']]
@@ -99,20 +101,61 @@ def _sign_up():
     """
     Opening the Sign-Up form to register a new user.
     """
-    with st.form("my_form"):
+    with st.form("signup_form", border=True):
         st.markdown("Please enter your user details")
-        st.text_input("Enter Username", key="test_username")
-        st.text_input("Enter Password", key="test_password", type='password')
-        st.text_input("Repeat your password", key="test_password_re", type='password')
-        st.number_input("Enter your Age", step=1)
-        
-        submitted = st.form_submit_button("Submit")
+        st.text_input("Enter Username", key="_username")
 
-# Likert scala
+        # To Do: Check if both password inputs are the same
+        st.text_input("Enter Password", key="_password", type='password')
+        st.text_input("Repeat your password", key="_password_re", type='password')
+
+        st.selectbox("Gender", ("Male", "Female", "Diverse"), key="_gender")
+        st.selectbox("English Level", ("B1.1","B1.2","B2.1", "B2.2", "C1.1", "C1.2", "C2.1", "C2.2"), key="_english_level")
+        st.number_input("Enter your Age", step=1, key="_age")
+
+        # To Do: Knowledge of Text-Subjects like Biology, Gaming etc. maybe as Slider(0-100) or 0/1 Checkbox
+
+        # Submit Button
+        st.form_submit_button("Submit")
+
+
+def save_user_profile():
+    """
+    Saves the user details after Submitting the signup formular
+    """
+    # To Do: Validate if all Inputs are complete
+
+    # Hashing the passwort before saving it as JSON
+    if "_password" in st.session_state:
+        hashed_password = hash(st.session_state["_password"])
+
+    # Check/Validate Inputs before? Does the user already exist?
+    temp_userprofile = {
+        "username":st.session_state["_username"],
+        "password":hashed_password,
+        "gender":st.session_state["_gender"],
+        "english_level":st.session_state["_english_level"],
+        "age":st.session_state["_age"]
+    }
+
+    # Building filepath
+    my_file_path = f'/workspace/data/userprofiles/{temp_userprofile["username"]}.json'
+
+    # One JSON file per User, bcs it could lead to problems, when all Clients want to write to the same JSON file
+    if not os.path.isfile(my_file_path):
+        with open(my_file_path, 'w', encoding='utf-8') as f:
+            json.dump(temp_userprofile, f, ensure_ascii=False, indent=4)
+        #If the file is created, Sign-Up was successful
+        if os.path.isfile(my_file_path):
+            st.success('Sign-Up was successful', icon="✅")
+    else:
+        st.error(f'A user with this username: {temp_userprofile["username"]} already exists', icon="🚨")
+
+# likert scala
 def _likert():
     # Create a container
     with st.container():
-        # Injecting custom CSS to style the container width
+        # Injecting custom CSS to style the container and hide the slider labels
         css = '''
                 <style>
                     /* Ensure the main container fits within the viewport */
@@ -131,7 +174,7 @@ def _likert():
                     }
                     /* Set the tick bar width */
                     div[data-testid="stTickBar"] {
-   
+
                     }
                     /* Ensure no horizontal overflow */
                     html, body {
@@ -141,15 +184,21 @@ def _likert():
                     div[data-testid="stTickBarMax"] {
                         flex: 1 1 1;
                     }
+                    /* Hide slider labels by setting their font size to 0 */
+                    div[data-testid="stTickBarMin"], 
+                    div[data-testid="stTickBarMax"], 
+                    div[data-testid="stTickBar"] > div {
+                        font-size: 0;
+                    }
                 </style>
                 '''
         st.markdown(css, unsafe_allow_html=True)
 
-        # Defining options for slider
+        # Defining options for the slider
         options = [
-            "I'm sure the left text is more simple",
+            "I'm sure the left text is simpler",
             "Both texts are actually the same",
-            "I'm sure the right text is more simple"
+            "I'm sure the right text is simpler"
         ]
 
         # Create slider
@@ -174,6 +223,7 @@ def _likert():
 
     # Indicate that the likert scale rating has been made
     st.session_state['likert_made'] = True
+
 
 if "name" in st.session_state:
     # User is already logged in
@@ -221,14 +271,18 @@ else:
     # type="password" to show input as *****
     st.sidebar.text_input("Enter Password", key="login_password", type="password")
 
+    # Button-click starts login process
     st.sidebar.button("Login", on_click=_login)
 
-    # Starts sign-up process 
+    # Button click starts sign-up process
     st.sidebar.button("Sign-Up", on_click=_sign_up, key="sign_up_button")
 
-# Debug
-if "test_username" in st.session_state:
-    st.write("Current Username is", st.session_state["test_username"])
+    # Check if the signup_form Formular was submitted
+    if 'FormSubmitter:signup_form-Submit' in st.session_state:
+        if st.session_state['FormSubmitter:signup_form-Submit']:
+            save_user_profile()
+
+
 
 # Defining the simplicity guideline
 st.sidebar.subheader("Simplicity:")
