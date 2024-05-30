@@ -64,12 +64,6 @@ def _update_history(winner):
         st.session_state[f'can_{winner}'],
         system_time
     )
-    st.session_state['current_match_id'] += 1
-    if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
-        # user finished labeling
-        _save_history()
-        st.session_state['current_match_id'] = len(st.session_state['determined_pairs']) - 1
-        st.write("Congratulations! You are done labeling the dataset! :partying_face:")
 
     if winner == 'a':
         handle_scores(st.session_state['texts'][st.session_state['can_a']], st.session_state['texts'][st.session_state['can_b']])
@@ -83,6 +77,14 @@ def _get_new_pair():
     Function is applied after every user decision.
     Sets next candidate pair to the current session state and saves history.
     """
+    st.session_state['current_match_id'] += 1
+    if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
+        # user finished labeling
+        _save_history()
+        st.session_state['current_match_id'] = len(st.session_state['determined_pairs']) - 1
+        st.write("Congratulations! You are done labeling the dataset! :partying_face:")
+
+    
     st.session_state['selection_made'] = False  # Reset selection state
     st.session_state['likert_made'] = False  # Reset likert scale state
     st.session_state['can_a'], st.session_state['can_b'] = st.session_state['determined_pairs'][st.session_state['current_match_id']]
