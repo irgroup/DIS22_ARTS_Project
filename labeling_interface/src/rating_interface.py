@@ -13,7 +13,6 @@ import streamlit.components.v1 as components
 # Custom CSS for Streamlit
 custom_css = """
 <style>
-/* Set the body background to be transparent */
 body {
     color: #00008B; /* Default text color set to dark blue */
 }
@@ -365,6 +364,15 @@ def _likert():
     # Indicate that the likert scale rating has been made
     st.session_state['likert_made'] = True
 
+# Defining the simplicity guideline
+def _simplicity_guideline():
+    st.sidebar.subheader("Simplicity:")
+    st.sidebar.write("Imagine you are writing an exam where you are allowed to google and where the task is to understand the two given texts.")
+    st.sidebar.subheader("Which of the two texts...")
+    st.sidebar.markdown("* generates less cognitive load?")
+    st.sidebar.markdown("* can you understand more quickly?")
+    st.sidebar.markdown("* are you more confident to answer questions about?")
+    st.sidebar.markdown("* is easier for you to reformulate without changing the meaning?")
 
 
 
@@ -395,7 +403,7 @@ if "name" in st.session_state:
         if st.button(can_b_text, key="b_can_b"):
             _update_history('a')
 
-
+    _simplicity_guideline()
     # Add text above likert scale
     _textlikert()
 
@@ -428,14 +436,3 @@ else:
     if 'FormSubmitter:signup_form-Submit' in st.session_state:
         if st.session_state['FormSubmitter:signup_form-Submit']:
             save_user_profile()
-
-
-
-# Defining the simplicity guideline
-st.sidebar.subheader("Simplicity:")
-st.sidebar.write("Imagine you are writing an exam where you are allowed to google and where the task is to understand the two given texts.")
-st.sidebar.subheader("Which of the two texts...")
-st.sidebar.markdown("* generates less cognitive load?")
-st.sidebar.markdown("* can you understand more quickly?")
-st.sidebar.markdown("* are you more confident to answer questions about?")
-st.sidebar.markdown("* is easier for you to reformulate without changing the meaning?")
