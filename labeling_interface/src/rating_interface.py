@@ -8,6 +8,56 @@ from datetime import datetime
 import glob
 import json
 import os.path
+import streamlit.components.v1 as components
+# changing the colours
+# Custom CSS for Streamlit
+custom_css = """
+<style>
+/* Set the body background to be transparent */
+body {
+    color: #00008B; /* Default text color set to dark blue */
+}
+
+/* Change the color of headers */
+h1, h2, h3, h4, h5, h6 {
+    color: #00008B; /* dark blue */
+}
+
+/* Customize buttons */
+.stButton>button {
+    background-color: #F8F8F8 ;
+    color: #00008B; /* dark blue text */
+    border: 2px solid #00008B;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.stButton>button:hover {
+    background-color: rgba(0, 128, 0, 0.1); /* Slight green background on hover */
+    border: 2px solid #008000; /* Green border on hover */
+    color: #00008B /*dark blue color stays*/
+}
+
+.stButton>button:active {
+   background-color: #008000; /* Green background on click */
+    color: #00008B; /* White text on click */
+    border: 2px solid #008000; /* Green border on click */
+}
+.stButton>button.clicked {
+    background-color: rgba(0, 128, 0, 0.1); /* Green background on click */
+    color: green; /* White text on click */
+    border: 2px solid rgba(0, 128, 0, 0.1); /* Green border on click */
+}
+.st_select.slider{
+    color: green; /* White text on click */
+}
+}
+</style>
+"""
+
+st.markdown(custom_css, unsafe_allow_html=True)
+
+
 
 def _login():
     """
@@ -151,6 +201,53 @@ def save_user_profile():
     else:
         st.error(f'A user with this username: {temp_userprofile["username"]} already exists', icon="🚨")
 
+# Textboxes above the likert scala
+def _textlikert():
+    css_text = """
+    <style>
+    .container-left1 {
+        position: relative;
+        left: -250px; /* move container to left */
+        top: 20px;  
+     }
+    .container-left1 p {
+        font-size: 20px; /* Change the text size to 20 */
+    }
+    </style>
+    """
+    st.markdown(css_text, unsafe_allow_html=True)
+
+    with st.container():
+        st.markdown('<div class="container-left1"><p>Please rate your decision:</p></div>', unsafe_allow_html=True)
+
+# Label above the likert scala
+def _labellikert():
+    css = """
+    <style>
+    .container-left {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        width: 170% !important;
+        left: -250px !important;
+        margin-bottom: -250px ;
+    }
+    .container-left {
+        font-size: 20px;
+        text-align: middle;
+        color: #00008B;
+    }
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+    with st.container():
+        st.markdown("""<div class="container-left">
+            <p>I'm sure the left text is simpler</p>
+            <p>Both are actually the same</p>
+            <p>I'm sure the right text is simpler</p>
+            </div>""", unsafe_allow_html=True)
+
+
 # likert scala
 def _likert():
     # Create a container
@@ -190,6 +287,21 @@ def _likert():
                     div[data-testid="stTickBar"] > div {
                         font-size: 0;
                     }
+                    /* Style for likert labels container */
+                    .likert-container {
+                        width: 100%;
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        top: -250px;
+                    }
+                    .likert-labels {
+                        display: flex;
+                        justify-content: space-between;
+                        width: 100%;
+                        color: black;
+                        font-size: 20px;
+                        margin-bottom: 10px;
+                    }
                 </style>
                 '''
         st.markdown(css, unsafe_allow_html=True)
@@ -201,9 +313,32 @@ def _likert():
             "I'm sure the right text is simpler"
         ]
 
+        # Inject custom CSS to change the slider color to blue
+        st.markdown(
+            """
+           <style>
+           .stSlider > label {
+            font-size: 40üx !important;  /* Increase font size of the label */
+            }
+            div[data-baseweb="slider"] > div > div > div {
+            background: #00008B !important;
+            }
+            div[data-baseweb="slider"] > div > div {
+            background: #979797 !important;
+            }
+            .StyledThumbValue {
+            color: #00008B !important; 
+            font-size: 16px !important;  /* Increase font size of the thumb value */
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+
         # Create slider
         simplicity_rating = st.select_slider(
-            "How do you rate the simplicity of the texts?",
+            " ",
             options=options,
             format_func=lambda x: f"{x}",
             key="simplicity_slider"
@@ -231,9 +366,9 @@ if "name" in st.session_state:
     if 'current_match_id' in st.session_state and 'determined_pairs' in st.session_state:
         finished = st.session_state['current_match_id']
         total = len(st.session_state['determined_pairs'])
-        st.header(f'Click on the text which is easier to understand ({finished + 1}/{total})', divider='rainbow')
+        st.header(f'Click on the text which is easier to understand ({finished + 1}/{total})', divider='gray')
     else:
-        st.header('Click on the text which is easier to understand', divider='rainbow')
+        st.header('Click on the text which is easier to understand', divider='gray')
 
     # Build Interface
     tab1, tab2 = st.columns(2)
@@ -252,8 +387,13 @@ if "name" in st.session_state:
         if st.button(can_b_text, key="b_can_b"):
             _update_history('a')
 
+
+    # Add text above likert scale
+    _textlikert()
+
     # Add Likert scale
     _likert()
+    _labellikert()
 
     # button to proceed to  next pair of texts
     st.button("Nächste Seite", on_click=_get_new_pair, disabled=not (st.session_state.get('selection_made', False) and st.session_state.get('likert_made', False)))
