@@ -247,6 +247,12 @@ def _labellikert():
             <p>I'm sure the right text is simpler</p>
             </div>""", unsafe_allow_html=True)
 
+# Define a function to get a new pair and reset the slider
+def _get_new_pair_and_reset_slider():
+    #  existing logic to get a new pair
+    _get_new_pair()
+    # Reset the slider to the default value
+    st.session_state.simplicity_slider = "Both texts are actually the same"
 
 # likert scala
 def _likert():
@@ -360,6 +366,8 @@ def _likert():
     st.session_state['likert_made'] = True
 
 
+
+
 if "name" in st.session_state:
     # User is already logged in
     # Build progress status
@@ -394,9 +402,8 @@ if "name" in st.session_state:
     # Add Likert scale
     _likert()
     _labellikert()
-
-    # button to proceed to  next pair of texts
-    st.button("Nächste Seite", on_click=_get_new_pair, disabled=not (st.session_state.get('selection_made', False) and st.session_state.get('likert_made', False)))
+    # button to proceed to next pair of texts
+    st.button("Next Page", on_click=_get_new_pair_and_reset_slider, disabled=not (st.session_state.get('selection_made', False) and st.session_state.get('likert_made', False)))
 
 else:
     # User is not logged in yet
