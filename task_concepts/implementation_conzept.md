@@ -85,8 +85,15 @@ ________________________________________________________________________________
 - Nach Rücksprache mit Björn (Termin noch nicht bekannt): weitere Feinheiten
 
 - Themen fertig (Marvin):
-  - Logger
-  - ...
+  - User Sign Up soweit fertig, User werden als einzelne JSON Dateien unter workspace/data/userprofiles abgelegt
+  - To Do bis 30.05:
+    - Login auf die neuen Userprofile anpassen (Was passiert mit history?)
+    - Validierung der Sign Up angaben (ist alles vollständig etc.)
+  - To Do bis 06.06:
+    - 'current_match_id' aus der history, ins Userprofil übernehmen
+    - Kenntnisstände zu themen im Userprofil? (Sinnvoll?)
+    - Ablage der Wissensabfragen
+ 
 __________________________________________________________________________________________
 __________________________________________________________________________________________
 ### Breich für Fragen und Notizen von anderen Gruppen ###
