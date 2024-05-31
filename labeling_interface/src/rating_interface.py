@@ -57,7 +57,6 @@ h1, h2, h3, h4, h5, h6 {
 st.markdown(custom_css, unsafe_allow_html=True)
 
 
-
 def _login():
     """
     Is executed when the login button is clicked.
@@ -136,7 +135,6 @@ def _get_new_pair():
         st.session_state['current_match_id'] = len(st.session_state['determined_pairs']) - 1
         st.write("Congratulations! You are done labeling the dataset! :partying_face:")
 
-
     st.session_state['selection_made'] = False  # Reset selection state
     st.session_state['likert_made'] = False  # Reset likert scale state
     st.session_state['can_a'], st.session_state['can_b'] = st.session_state['determined_pairs'][st.session_state['current_match_id']]
@@ -202,6 +200,7 @@ def save_user_profile():
             st.success('Sign-Up was successful', icon="✅")
     else:
         st.error(f'A user with this username: {temp_userprofile["username"]} already exists', icon="🚨")
+
 
 # Textboxes above the likert scala
 def _textlikert():
@@ -441,6 +440,7 @@ else:
     # Button-click starts login process
     st.sidebar.button("Login", on_click=_login)
 
+
     # Button click starts sign-up process
     st.sidebar.button("Sign-Up", on_click=_sign_up, key="sign_up_button")
 
@@ -448,6 +448,7 @@ else:
     if 'FormSubmitter:signup_form-Submit' in st.session_state:
         if st.session_state['FormSubmitter:signup_form-Submit']:
             save_user_profile()
+
 
 
 
