@@ -21,39 +21,8 @@ body {
 h1, h2, h3, h4, h5, h6 {
     color: #00008B; /* dark blue */
 }
-
-/* Customize buttons */
-.stButton>button {
-    background-color: #F8F8F8 ;
-    color: #00008B; /* dark blue text */
-    border: 2px solid #00008B;
-    border-radius: 8px;
-    padding: 10px 20px;
-}
-
-.stButton>button:hover {
-    background-color: rgba(0, 128, 0, 0.1); /* Slight green background on hover */
-    border: 2px solid #008000; /* Green border on hover */
-    color: #00008B /*dark blue color stays*/
-}
-
-.stButton>button:active {
-   background-color: #008000; /* Green background on click */
-    color: #00008B; /* White text on click */
-    border: 2px solid #008000; /* Green border on click */
-}
-.stButton>button.clicked {
-    background-color: rgba(0, 128, 0, 0.1); /* Green background on click */
-    color: green; /* White text on click */
-    border: 2px solid rgba(0, 128, 0, 0.1); /* Green border on click */
-}
-.st_select.slider{
-    color: green; /* White text on click */
-}
-}
 </style>
 """
-
 st.markdown(custom_css, unsafe_allow_html=True)
 
 
@@ -221,33 +190,6 @@ def _textlikert():
     with st.container():
         st.markdown('<div class="container-left1"><p>Please rate your decision:</p></div>', unsafe_allow_html=True)
 
-# Label above the likert scala
-def _labellikert():
-    css = """
-    <style>
-    .container-left {
-        display: flex;
-        justify-content: space-between;
-        position: relative;
-        width: 170% !important;
-        left: -250px !important;
-        margin-bottom: -250px ;
-    }
-    .container-left {
-        font-size: 20px;
-        text-align: middle;
-        color: #00008B;
-    }
-    </style>
-    """
-    st.markdown(css, unsafe_allow_html=True)
-    with st.container():
-        st.markdown("""<div class="container-left">
-            <p>I'm sure the left text is simpler</p>
-            <p>Both are actually the same</p>
-            <p>I'm sure the right text is simpler</p>
-            </div>""", unsafe_allow_html=True)
-
 # Define a function to get a new pair and reset the slider
 def _get_new_pair_and_reset_slider():
     #  existing logic to get a new pair
@@ -259,9 +201,13 @@ def _get_new_pair_and_reset_slider():
 # For storing the selected likert value as an integer
 # Mapping of textual labels to numerical values
 label_to_value = {
-    "I'm sure the left text is simpler": 0,
-    "Both texts are actually the same": 1,
-    "I'm sure the right text is simpler": 2
+    "I'm very sure the left text is simpler": 0,
+    "I'm sure the left text is simpler": 1,
+    "I'm pretty sure the left text is simpler": 2,
+    "Both texts are actually the same": 3,
+    "I'm pretty sure the right text is simpler": 4,
+    "I'm sure the right text is simpler": 5,
+    "I'm very sure the right text is simpler": 6
 }
 
 # likert scala
@@ -282,7 +228,7 @@ def _likert():
                         left: 50%;
                         right: 50%;
                         transform: translateX(-50%);
-                        max-width: 1200px !important;
+                        max-width: 1800px !important;
                         padding: 0 !important; /* No padding */
                     }
                     /* Set the tick bar width */
@@ -296,12 +242,6 @@ def _likert():
                     div[data-testid="stTickBarMin"],
                     div[data-testid="stTickBarMax"] {
                         flex: 1 1 1;
-                    }
-                    /* Hide slider labels by setting their font size to 0 */
-                    div[data-testid="stTickBarMin"], 
-                    div[data-testid="stTickBarMax"], 
-                    div[data-testid="stTickBar"] > div {
-                        font-size: 0;
                     }
                     /* Style for likert labels container */
                     .likert-container {
@@ -324,9 +264,13 @@ def _likert():
 
         # Defining options for the slider
         options = [
+            "I'm very sure the left text is simpler",
             "I'm sure the left text is simpler",
+            "I'm pretty sure the left text is simpler",
             "Both texts are actually the same",
-            "I'm sure the right text is simpler"
+            "I'm pretty sure the right text is simpler",
+            "I'm sure the right text is simpler",
+            "I'm very sure the right text is simpler"
         ]
 
         # Inject custom CSS to change the slider color to blue
@@ -339,9 +283,7 @@ def _likert():
             div[data-baseweb="slider"] > div > div > div {
             background: #00008B !important;
             }
-            div[data-baseweb="slider"] > div > div {
-            background: #979797 !important;
-            }
+            
             .StyledThumbValue {
             color: #00008B !important; 
             font-size: 16px !important;  /* Increase font size of the thumb value */
@@ -379,13 +321,42 @@ def _likert():
 
 # Defining the simplicity guideline
 def _simplicity_guideline():
-    st.sidebar.subheader("Simplicity:")
-    st.sidebar.write("Imagine you are writing an exam where you are allowed to google and where the task is to understand the two given texts.")
-    st.sidebar.subheader("Which of the two texts...")
-    st.sidebar.markdown("* generates less cognitive load?")
-    st.sidebar.markdown("* can you understand more quickly?")
-    st.sidebar.markdown("* are you more confident to answer questions about?")
-    st.sidebar.markdown("* is easier for you to reformulate without changing the meaning?")
+    # CSS für die Anpassung der Container-Position
+    css_text = """
+    <style>
+    .container-left2 {
+        position: relative;
+        left: -650px; /* move container to left */
+        width:530px;
+        top: -100px;  
+    }
+    .container-left2  {
+        font-size: 20px; /* Change the text size to 20 */
+        border: 2px solid #001CAD;
+    }
+    </style>
+    """
+    st.markdown(css_text, unsafe_allow_html=True)
+
+    with st.container():
+        st.markdown(
+            """
+            <div class="container-left2">
+                <h2>Simplicity:</h2>
+                <p>Imagine you are writing an exam where you are allowed to google and
+                 where the task is to understand the two given texts.</p>
+                <h2>Which of the two texts...</h2>
+                <ul>
+                    <li>generates less cognitive load?</li>
+                    <li>can you understand more quickly?</li>
+                    <li>are you more confident to answer questions about?</li>
+                    <li>is easier for you to reformulate without changing the meaning?</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True
+        )
+
+
 
 if "name" in st.session_state:
     # User is already logged in
@@ -420,7 +391,6 @@ if "name" in st.session_state:
 
     # Add Likert scale
     _likert()
-    _labellikert()
     # button to proceed to next pair of texts
     st.button("Next Page", on_click=_get_new_pair_and_reset_slider, disabled=not (st.session_state.get('selection_made', False) and st.session_state.get('likert_made', False)))
 
@@ -450,6 +420,3 @@ else:
             save_user_profile()
 
 
-
-
-#
