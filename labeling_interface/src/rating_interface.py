@@ -200,32 +200,29 @@ def _textlikert():
     <style>
     .container-left1 {
         position: relative;
-        left: -250px; /* move container to left */
-        top: 20px;  
+        left: -20vw;; /* move container to left */
+        top: 2vh;  
      }
-    .container-left1 p {
-        font-size: 20px; /* Change the text size to 20 */
-    }
     </style>
     """
     st.markdown(css_text, unsafe_allow_html=True)
 
     with st.container():
-        st.markdown('<div class="container-left1"><p>Please choose the :</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="container-left1"><p>Please :</p></div>', unsafe_allow_html=True)
 
 # Define a function to get a new pair and reset the slider
 def _get_new_pair_and_reset_slider():
     #  existing logic to get a new pair
     _get_new_pair()
     # Reset the slider to the default value
-    st.session_state.simplicity_slider = "choose"
+    st.session_state.simplicity_slider = "move the slider"
 
 # Mapping of textual labels to numerical values
 label_to_value = {
     "I'm very sure the left text is simpler": 0,
     "I'm sure the left text is simpler": 1,
     "I'm pretty sure the left text is simpler": 2,
-    "choose": 3,
+    "move the slider": 3,
     "I'm pretty sure the right text is simpler": 4,
     "I'm sure the right text is simpler": 5,
     "I'm very sure the right text is simpler": 6
@@ -245,11 +242,10 @@ def _likert():
                     /* Ensure the slider container stretches to full viewport width */
                     div[data-testid="stSlider"] {
                         position: relative;
-                        width: 200vw !important;
+                        width: 100vw !important;
                         left: 50%;
-                        right: 50%;
                         transform: translateX(-50%);
-                        max-width: 1800px !important;
+                        max-width: 90vw !important;
                         padding: 0 !important; /* No padding */
                     }
                     /* Set the tick bar width */
@@ -267,16 +263,17 @@ def _likert():
                     /* Style for likert labels container */
                     .likert-container {
                         width: 100%;
-                        max-width: 1200px;
+                        max-width: 80vw;
                         margin: 0 auto;
-                        top: -250px;
+                        top: -20vh;
                     }
                     .likert-labels {
                         display: flex;
                         justify-content: space-between;
                         width: 100%;
-                        font-size: 20px;
-                        margin-bottom: 10px;
+                        color: black;
+                        font-size: 1rem;
+                        margin-bottom: 1vh;
                     }
                 </style>
                 '''
@@ -287,7 +284,7 @@ def _likert():
             "I'm very sure the left text is simpler",
             "I'm sure the left text is simpler",
             "I'm pretty sure the left text is simpler",
-            "choose",
+            "move the slider",
             "I'm pretty sure the right text is simpler",
             "I'm sure the right text is simpler",
             "I'm very sure the right text is simpler"
@@ -324,14 +321,14 @@ def _simplicity_guideline():
     css_text = """
     <style>
     .container-left2 {
-        position: relative;
-        left: -650px; /* move container to left */
-        width:530px;
-        top: -100px;  
+        position: absolute;
+        left: -30vw; /* move container to left */
+        width: 20vw;
+        top: -30vh;
     }
     .container-left2  {
-        font-size: 20px; /* Change the text size to 20 */
-        border: 2px solid;
+        font-size: 1.2 rem; 
+        border: 1px solid;
     }
     </style>
     """
@@ -375,9 +372,9 @@ if "name" in st.session_state:
     # Winner is the more complex text. As the user should click on the easier text, the arguments are switched
     # Display text a and b in columns with increased height and width
     with tab1:
-        st.markdown(f'<div style="height: 400px;">{can_a_text}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_a_text}</div>', unsafe_allow_html=True)
     with tab2:
-        st.markdown(f'<div style="height: 400px;">{can_b_text}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_b_text}</div>', unsafe_allow_html=True)
 
     # Add simplicity guideline
     _simplicity_guideline()
@@ -390,8 +387,8 @@ if "name" in st.session_state:
 
     # Determine winner based on user's choice
     # Attempt to retrieve the value of 'simplicity_slider' from st.session_state.
-    # If the key does not exist, default to "choose".
-    simplicity_rating = st.session_state.get('simplicity_slider', "choose")
+    # If the key does not exist, default to "move the slider".
+    simplicity_rating = st.session_state.get('simplicity_slider', "move the slider")
     if simplicity_rating in [
         "I'm very sure the left text is simpler",
         "I'm sure the left text is simpler",
@@ -417,7 +414,7 @@ if "name" in st.session_state:
 
     # Submit button to proceed to next pair of texts
     # Not able to click, when on "choose" because there would be no winner
-    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "choose")
+    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "move the slider")
 
 else:
     # User is not logged in yet
