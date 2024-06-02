@@ -29,28 +29,57 @@ st.markdown(custom_css, unsafe_allow_html=True)
 def _login():
     """
     Is executed when the login button is clicked.
-    Loads the selected dataset and checks whether the given user exists.
+    Loads the selected dataset + Userporfile and checks whether the given user exists.
     If yes, history is loaded.
     If not, a new history dictionary is instantiated.
 
     Executes _init() afterward.
     """
-    st.session_state['name'] = st.session_state["login_name"]
-    history_path = f"/workspace/histories/{st.session_state['name']}-{st.session_state['ds_version']}_history.pkl"
-    data_path = f"/workspace/data/ARTS_only_texts_{st.session_state['ds_version']}.pkl"
+    credentials_match = False
+    # Try to load Userprofile for "login_name" input from path /data/userprofiles
+    if "login_name" in st.session_state and "login_password" in st.session_state:
+        userprofile_path = f'/workspace/data/userprofiles/{st.session_state["login_name"]}.json'
 
-    data = pickle.load(open(data_path, "rb"))
-    st.session_state['texts'] = {t_id: Text(t_id, text[0]) for t_id, text in data.iterrows()}
-    if os.path.exists(history_path):
-        st.session_state['history'] = pickle.load(open(history_path, "rb"))
-        st.session_state['current_match_id'] = len(st.session_state['history'].keys())
-        apply_history(st.session_state['history'], st.session_state['texts'])
+        # Check if User profile file exists
+        if os.path.isfile(userprofile_path):
+            with open(userprofile_path) as user_file:
+                user_profile = json.load(user_file)
+
+                # Now check if the combination of Username + Password matches 
+                if (st.session_state["login_name"] == user_profile['username'] and 
+                    hash(st.session_state["login_password"]) == user_profile['password']):
+                    credentials_match = True
+        else:
+            # If there is no file for this username, the user has to signup first
+            st.error(f'No User with the Username = {st.session_state["login_name"]} exists', icon="🚨")
+            return
     else:
-        # user does not exist
-        st.session_state['history'] = {}
-        st.session_state['current_match_id'] = 0
+        # the keys dont exist in the session_state dict
+        st.error(f'No Username or Password given', icon="🚨")
+        return
 
-    _init()
+    # Check if Username and Password match, then continue
+    if credentials_match:
+        # History handling stays the same and saves 'current_match_id'
+        st.session_state['name'] = st.session_state["login_name"]
+        history_path = f"/workspace/histories/{st.session_state['name']}-{st.session_state['ds_version']}_history.pkl"
+        data_path = f"/workspace/data/ARTS_only_texts_{st.session_state['ds_version']}.pkl"
+
+        data = pickle.load(open(data_path, "rb"))
+        st.session_state['texts'] = {t_id: Text(t_id, text[0]) for t_id, text in data.iterrows()}
+        if os.path.exists(history_path):
+            st.session_state['history'] = pickle.load(open(history_path, "rb"))
+            st.session_state['current_match_id'] = len(st.session_state['history'].keys())
+            apply_history(st.session_state['history'], st.session_state['texts'])
+        else:
+            # user does not exist
+            st.session_state['history'] = {}
+            st.session_state['current_match_id'] = 0
+        _init()
+    else:
+        # If the credentials dont match, show error message and exit function
+        st.error(f'Username and Password combination do not match', icon="🚨")
+        return
 
 def _init():
     """
@@ -126,13 +155,13 @@ def _sign_up():
 
         # To Do: Check if both password inputs are the same
         st.text_input("Enter Password", key="_password", type='password')
-        st.text_input("Repeat your password", key="_password_re", type='password')
+
+        # Might not be needed, bcs the user can see his "****" password, if he wants to
+        # st.text_input("Repeat your password", key="_password_re", type='password')
 
         st.selectbox("Gender", ("Male", "Female", "Diverse"), key="_gender")
         st.selectbox("English Level", ("B1.1","B1.2","B2.1", "B2.2", "C1.1", "C1.2", "C2.1", "C2.2"), key="_english_level")
         st.number_input("Enter your Age", step=1, key="_age")
-
-        # To Do: Knowledge of Text-Subjects like Biology, Gaming etc. maybe as Slider(0-100) or 0/1 Checkbox
 
         # Submit Button
         st.form_submit_button("Submit")
@@ -142,13 +171,23 @@ def save_user_profile():
     """
     Saves the user details after Submitting the signup formular
     """
-    # To Do: Validate if all Inputs are complete
+    # Validate if all Inputs are complete, if one is missing, show error message
+    if ("_username" in st.session_state and "_password" in st.session_state and
+        "_gender" in st.session_state and "_english_level" in st.session_state and
+        "_age" in st.session_state):
+
+        if (not st.session_state["_username"] or not st.session_state["_password"] or
+            not st.session_state["_gender"] or not st.session_state["_english_level"] or
+            not st.session_state["_age"]):
+
+            st.error(f'The sign-up details were incomplete', icon="🚨")
+            return
 
     # Hashing the passwort before saving it as JSON
     if "_password" in st.session_state:
         hashed_password = hash(st.session_state["_password"])
 
-    # Check/Validate Inputs before? Does the user already exist?
+    # create clean dictionary
     temp_userprofile = {
         "username":st.session_state["_username"],
         "password":hashed_password,
@@ -405,11 +444,10 @@ else:
     st.sidebar.text_input("Username", key="login_name")
 
     # type="password" to show input as *****
-    st.sidebar.text_input("Enter Password", key="login_password", type="password")
+    st.sidebar.text_input("Password", key="login_password", type="password")
 
     # Button-click starts login process
     st.sidebar.button("Login", on_click=_login)
-
 
     # Button click starts sign-up process
     st.sidebar.button("Sign-Up", on_click=_sign_up, key="sign_up_button")
