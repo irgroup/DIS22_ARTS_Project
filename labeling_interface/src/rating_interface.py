@@ -9,22 +9,6 @@ import glob
 import json
 import os.path
 import streamlit.components.v1 as components
-# changing the colours
-# Custom CSS for Streamlit
-custom_css = """
-<style>
-body {
-    color: #00008B; /* Default text color set to dark blue */
-}
-
-/* Change the color of headers */
-h1, h2, h3, h4, h5, h6 {
-    color: #00008B; /* dark blue */
-}
-</style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
-
 
 def _login():
     """
@@ -227,21 +211,21 @@ def _textlikert():
     st.markdown(css_text, unsafe_allow_html=True)
 
     with st.container():
-        st.markdown('<div class="container-left1"><p>Please rate your decision:</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="container-left1"><p>Please choose the :</p></div>', unsafe_allow_html=True)
 
 # Define a function to get a new pair and reset the slider
 def _get_new_pair_and_reset_slider():
     #  existing logic to get a new pair
     _get_new_pair()
     # Reset the slider to the default value
-    st.session_state.simplicity_slider = "Both texts are actually the same"
+    st.session_state.simplicity_slider = "choose"
 
 # Mapping of textual labels to numerical values
 label_to_value = {
     "I'm very sure the left text is simpler": 0,
     "I'm sure the left text is simpler": 1,
     "I'm pretty sure the left text is simpler": 2,
-    "Both texts are actually the same": 3,
+    "choose": 3,
     "I'm pretty sure the right text is simpler": 4,
     "I'm sure the right text is simpler": 5,
     "I'm very sure the right text is simpler": 6
@@ -291,7 +275,6 @@ def _likert():
                         display: flex;
                         justify-content: space-between;
                         width: 100%;
-                        color: black;
                         font-size: 20px;
                         margin-bottom: 10px;
                     }
@@ -304,31 +287,11 @@ def _likert():
             "I'm very sure the left text is simpler",
             "I'm sure the left text is simpler",
             "I'm pretty sure the left text is simpler",
-            "Both texts are actually the same",
+            "choose",
             "I'm pretty sure the right text is simpler",
             "I'm sure the right text is simpler",
             "I'm very sure the right text is simpler"
         ]
-
-        # Inject custom CSS to change the slider color to blue
-        st.markdown(
-            """
-           <style>
-           .stSlider > label {
-            font-size: 40üx !important;  /* Increase font size of the label */
-            }
-            div[data-baseweb="slider"] > div > div > div {
-            background: #00008B !important;
-            }
-            
-            .StyledThumbValue {
-            color: #00008B !important; 
-            font-size: 16px !important;  /* Increase font size of the thumb value */
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
 
         # Create slider
         simplicity_rating = st.select_slider(
@@ -368,7 +331,7 @@ def _simplicity_guideline():
     }
     .container-left2  {
         font-size: 20px; /* Change the text size to 20 */
-        border: 2px solid #001CAD;
+        border: 2px solid;
     }
     </style>
     """
@@ -427,8 +390,8 @@ if "name" in st.session_state:
 
     # Determine winner based on user's choice
     # Attempt to retrieve the value of 'simplicity_slider' from st.session_state.
-    # If the key does not exist, default to "Both texts are actually the same".
-    simplicity_rating = st.session_state.get('simplicity_slider', "Both texts are actually the same")
+    # If the key does not exist, default to "choose".
+    simplicity_rating = st.session_state.get('simplicity_slider', "choose")
     if simplicity_rating in [
         "I'm very sure the left text is simpler",
         "I'm sure the left text is simpler",
@@ -453,8 +416,8 @@ if "name" in st.session_state:
         _update_history('b')
 
     # Submit button to proceed to next pair of texts
-    # Not able to click, when on "Both texts are actually the same" because there would be no winner
-    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "Both texts are actually the same")
+    # Not able to click, when on "choose" because there would be no winner
+    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "choose")
 
 else:
     # User is not logged in yet
