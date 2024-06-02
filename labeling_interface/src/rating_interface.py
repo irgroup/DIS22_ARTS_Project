@@ -9,6 +9,7 @@ import glob
 import json
 import os.path
 import streamlit.components.v1 as components
+import hashlib
 
 def _login():
     """
@@ -29,9 +30,12 @@ def _login():
             with open(userprofile_path) as user_file:
                 user_profile = json.load(user_file)
 
+                # hashing entered "login_password"
+                hashed_login_pw = hashlib.sha256(str(st.session_state["login_password"]).encode('utf-8'))
+                
                 # Now check if the combination of Username + Password matches 
                 if (st.session_state["login_name"] == user_profile['username'] and 
-                    hash(st.session_state["login_password"]) == user_profile['password']):
+                    hashed_login_pw.hexdigest() == user_profile['password']):
                     credentials_match = True
         else:
             # If there is no file for this username, the user has to signup first
@@ -169,12 +173,12 @@ def save_user_profile():
 
     # Hashing the passwort before saving it as JSON
     if "_password" in st.session_state:
-        hashed_password = hash(st.session_state["_password"])
+        hashed_password = hashlib.sha256(str(st.session_state["_password"]).encode('utf-8'))
 
     # create clean dictionary
     temp_userprofile = {
         "username":st.session_state["_username"],
-        "password":hashed_password,
+        "password":hashed_password.hexdigest(),
         "gender":st.session_state["_gender"],
         "english_level":st.session_state["_english_level"],
         "age":st.session_state["_age"]
