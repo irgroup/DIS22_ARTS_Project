@@ -236,8 +236,6 @@ def _get_new_pair_and_reset_slider():
     # Reset the slider to the default value
     st.session_state.simplicity_slider = "Both texts are actually the same"
 
-
-# For storing the selected likert value as an integer
 # Mapping of textual labels to numerical values
 label_to_value = {
     "I'm very sure the left text is simpler": 0,
@@ -332,7 +330,6 @@ def _likert():
             unsafe_allow_html=True
         )
 
-
         # Create slider
         simplicity_rating = st.select_slider(
             " ",
@@ -340,6 +337,7 @@ def _likert():
             format_func=lambda x: f"{x}",
             key="simplicity_slider"
         )
+
         # Get the numerical value corresponding to the selected label
         selected_value = label_to_value[simplicity_rating]
 
@@ -354,13 +352,12 @@ def _likert():
         st.session_state['likert_values'][st.session_state['current_match_id']] = ratings
 
     # Indicate that the likert scale rating has been made
-    st.session_state['likert_made'] = True
+    st.session_state['likert_made'] = True if selected_value != 3 else False
     history = st.session_state['likert_values'].get(st.session_state['current_match_id'], {})
-
 
 # Defining the simplicity guideline
 def _simplicity_guideline():
-    # CSS für die Anpassung der Container-Position
+    # CSS for container position
     css_text = """
     <style>
     .container-left2 {
@@ -395,8 +392,6 @@ def _simplicity_guideline():
             """, unsafe_allow_html=True
         )
 
-
-
 if "name" in st.session_state:
     # User is already logged in
     # Build progress status
@@ -415,23 +410,51 @@ if "name" in st.session_state:
     can_b_text = f"{i_b}: {st.session_state['texts'][i_b].get_text()}"
 
     # Winner is the more complex text. As the user should click on the easier text, the arguments are switched
-    # Buttons for the user decision:
+    # Display text a and b in columns with increased height and width
     with tab1:
-        if st.button(can_a_text, key="b_can_a"):
-            _update_history('b')
-
+        st.markdown(f'<div style="height: 400px;">{can_a_text}</div>', unsafe_allow_html=True)
     with tab2:
-        if st.button(can_b_text, key="b_can_b"):
-            _update_history('a')
+        st.markdown(f'<div style="height: 400px;">{can_b_text}</div>', unsafe_allow_html=True)
 
+    # Add simplicity guideline
     _simplicity_guideline()
+
     # Add text above likert scale
     _textlikert()
 
     # Add Likert scale
     _likert()
+
+    # Determine winner based on user's choice
+    # Attempt to retrieve the value of 'simplicity_slider' from st.session_state.
+    # If the key does not exist, default to "Both texts are actually the same".
+    simplicity_rating = st.session_state.get('simplicity_slider', "Both texts are actually the same")
+    if simplicity_rating in [
+        "I'm very sure the left text is simpler",
+        "I'm sure the left text is simpler",
+        "I'm pretty sure the left text is simpler"
+    ]:
+        winner = 'a'
+    elif simplicity_rating in [
+        "I'm pretty sure the right text is simpler",
+        "I'm sure the right text is simpler",
+        "I'm very sure the right text is simpler"
+    ]:
+        winner = 'b'
+    else:
+        winner = None
+
+    # Handle scores based on the determined winner
+    if winner == 'a':
+        handle_scores(st.session_state['texts'][st.session_state['can_a']], st.session_state['texts'][st.session_state['can_b']])
+        _update_history('a')
+    elif winner == 'b':
+        handle_scores(st.session_state['texts'][st.session_state['can_b']], st.session_state['texts'][st.session_state['can_a']])
+        _update_history('b')
+
     # Submit button to proceed to next pair of texts
-    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=not st.session_state.get('likert_made', False))
+    # Not able to click, when on "Both texts are actually the same" because there would be no winner
+    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "Both texts are actually the same")
 
 else:
     # User is not logged in yet
