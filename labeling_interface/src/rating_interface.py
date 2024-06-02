@@ -29,7 +29,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 def _login():
     """
     Is executed when the login button is clicked.
-    Loads the selected dataset + Userporfile and checks whether the given user exists.
+    Loads the selected dataset + Userprofile and checks whether the given user exists.
     If yes, history is loaded.
     If not, a new history dictionary is instantiated.
 
