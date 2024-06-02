@@ -364,9 +364,9 @@ if "name" in st.session_state:
     if 'current_match_id' in st.session_state and 'determined_pairs' in st.session_state:
         finished = st.session_state['current_match_id']
         total = len(st.session_state['determined_pairs'])
-        st.header(f'Click on the text which is easier to understand ({finished + 1}/{total})', divider='gray')
+        st.header(f'Current status labeling: ({finished + 1}/{total})', divider='gray')
     else:
-        st.header('Click on the text which is easier to understand', divider='gray')
+        st.header('Current status labeling:', divider='gray')
 
     # Build Interface
     tab1, tab2 = st.columns(2)
@@ -391,8 +391,8 @@ if "name" in st.session_state:
 
     # Add Likert scale
     _likert()
-    # button to proceed to next pair of texts
-    st.button("Next Page", on_click=_get_new_pair_and_reset_slider, disabled=not (st.session_state.get('selection_made', False) and st.session_state.get('likert_made', False)))
+    # Submit button to proceed to next pair of texts
+    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=not st.session_state.get('likert_made', False))
 
 else:
     # User is not logged in yet
