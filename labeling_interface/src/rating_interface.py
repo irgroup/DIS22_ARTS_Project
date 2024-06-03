@@ -11,6 +11,7 @@ import os.path
 import streamlit.components.v1 as components
 import hashlib
 
+# login user
 def _login():
     """
     Is executed when the login button is clicked.
