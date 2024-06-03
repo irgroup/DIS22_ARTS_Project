@@ -213,7 +213,7 @@ def _textlikert():
     st.markdown(css_text, unsafe_allow_html=True)
 
     with st.container():
-        st.markdown('<div class="container-left1"><p>Please :</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="container-left1"><p>Please decide which text is simpler:</p></div>', unsafe_allow_html=True)
 
 # Define a function to get a new pair and reset the slider
 def _get_new_pair_and_reset_slider():
