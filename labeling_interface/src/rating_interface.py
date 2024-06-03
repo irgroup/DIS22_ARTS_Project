@@ -9,65 +9,48 @@ import glob
 import json
 import os.path
 import streamlit.components.v1 as components
-import hashlib
+# changing the colours
+# Custom CSS for Streamlit
+custom_css = """
+<style>
+body {
+    color: #00008B; /* Default text color set to dark blue */
+}
+
+/* Change the color of headers */
+h1, h2, h3, h4, h5, h6 {
+    color: #00008B; /* dark blue */
+}
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
+
 
 def _login():
     """
     Is executed when the login button is clicked.
-    Loads the selected dataset + Userprofile and checks whether the given user exists.
+    Loads the selected dataset and checks whether the given user exists.
     If yes, history is loaded.
     If not, a new history dictionary is instantiated.
 
     Executes _init() afterward.
     """
-    credentials_match = False
-    # Try to load Userprofile for "login_name" input from path /data/userprofiles
-    if "login_name" in st.session_state and "login_password" in st.session_state:
-        userprofile_path = f'/workspace/data/userprofiles/{st.session_state["login_name"]}.json'
+    st.session_state['name'] = st.session_state["login_name"]
+    history_path = f"/workspace/histories/{st.session_state['name']}-{st.session_state['ds_version']}_history.pkl"
+    data_path = f"/workspace/data/ARTS_only_texts_{st.session_state['ds_version']}.pkl"
 
-        # Check if User profile file exists
-        if os.path.isfile(userprofile_path):
-            with open(userprofile_path) as user_file:
-                user_profile = json.load(user_file)
-
-                # hashing entered "login_password"
-                hashed_login_pw = hashlib.sha256(str(st.session_state["login_password"]).encode('utf-8'))
-                
-                # Now check if the combination of Username + Password matches 
-                if (st.session_state["login_name"] == user_profile['username'] and 
-                    hashed_login_pw.hexdigest() == user_profile['password']):
-                    credentials_match = True
-        else:
-            # If there is no file for this username, the user has to signup first
-            st.error(f'No User with the Username = {st.session_state["login_name"]} exists', icon="🚨")
-            return
+    data = pickle.load(open(data_path, "rb"))
+    st.session_state['texts'] = {t_id: Text(t_id, text[0]) for t_id, text in data.iterrows()}
+    if os.path.exists(history_path):
+        st.session_state['history'] = pickle.load(open(history_path, "rb"))
+        st.session_state['current_match_id'] = len(st.session_state['history'].keys())
+        apply_history(st.session_state['history'], st.session_state['texts'])
     else:
-        # the keys dont exist in the session_state dict
-        st.error(f'No Username or Password given', icon="🚨")
-        return
+        # user does not exist
+        st.session_state['history'] = {}
+        st.session_state['current_match_id'] = 0
 
-    # Check if Username and Password match, then continue
-    if credentials_match:
-        # History handling stays the same and saves 'current_match_id'
-        st.session_state['name'] = st.session_state["login_name"]
-        history_path = f"/workspace/histories/{st.session_state['name']}-{st.session_state['ds_version']}_history.pkl"
-        data_path = f"/workspace/data/ARTS_only_texts_{st.session_state['ds_version']}.pkl"
-
-        data = pickle.load(open(data_path, "rb"))
-        st.session_state['texts'] = {t_id: Text(t_id, text[0]) for t_id, text in data.iterrows()}
-        if os.path.exists(history_path):
-            st.session_state['history'] = pickle.load(open(history_path, "rb"))
-            st.session_state['current_match_id'] = len(st.session_state['history'].keys())
-            apply_history(st.session_state['history'], st.session_state['texts'])
-        else:
-            # user does not exist
-            st.session_state['history'] = {}
-            st.session_state['current_match_id'] = 0
-        _init()
-    else:
-        # If the credentials dont match, show error message and exit function
-        st.error(f'Username and Password combination do not match', icon="🚨")
-        return
+    _init()
 
 def _init():
     """
@@ -143,13 +126,13 @@ def _sign_up():
 
         # To Do: Check if both password inputs are the same
         st.text_input("Enter Password", key="_password", type='password')
-
-        # Might not be needed, bcs the user can see his "****" password, if he wants to
-        # st.text_input("Repeat your password", key="_password_re", type='password')
+        st.text_input("Repeat your password", key="_password_re", type='password')
 
         st.selectbox("Gender", ("Male", "Female", "Diverse"), key="_gender")
         st.selectbox("English Level", ("B1.1","B1.2","B2.1", "B2.2", "C1.1", "C1.2", "C2.1", "C2.2"), key="_english_level")
         st.number_input("Enter your Age", step=1, key="_age")
+
+        # To Do: Knowledge of Text-Subjects like Biology, Gaming etc. maybe as Slider(0-100) or 0/1 Checkbox
 
         # Submit Button
         st.form_submit_button("Submit")
@@ -159,26 +142,16 @@ def save_user_profile():
     """
     Saves the user details after Submitting the signup formular
     """
-    # Validate if all Inputs are complete, if one is missing, show error message
-    if ("_username" in st.session_state and "_password" in st.session_state and
-        "_gender" in st.session_state and "_english_level" in st.session_state and
-        "_age" in st.session_state):
-
-        if (not st.session_state["_username"] or not st.session_state["_password"] or
-            not st.session_state["_gender"] or not st.session_state["_english_level"] or
-            not st.session_state["_age"]):
-
-            st.error(f'The sign-up details were incomplete', icon="🚨")
-            return
+    # To Do: Validate if all Inputs are complete
 
     # Hashing the passwort before saving it as JSON
     if "_password" in st.session_state:
-        hashed_password = hashlib.sha256(str(st.session_state["_password"]).encode('utf-8'))
+        hashed_password = hash(st.session_state["_password"])
 
-    # create clean dictionary
+    # Check/Validate Inputs before? Does the user already exist?
     temp_userprofile = {
         "username":st.session_state["_username"],
-        "password":hashed_password.hexdigest(),
+        "password":hashed_password,
         "gender":st.session_state["_gender"],
         "english_level":st.session_state["_english_level"],
         "age":st.session_state["_age"]
@@ -204,29 +177,34 @@ def _textlikert():
     <style>
     .container-left1 {
         position: relative;
-        left: -20vw;; /* move container to left */
-        top: 2vh;  
+        left: -250px; /* move container to left */
+        top: 20px;  
      }
+    .container-left1 p {
+        font-size: 20px; /* Change the text size to 20 */
+    }
     </style>
     """
     st.markdown(css_text, unsafe_allow_html=True)
 
     with st.container():
-        st.markdown('<div class="container-left1"><p>Please :</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="container-left1"><p>Please rate your decision:</p></div>', unsafe_allow_html=True)
 
 # Define a function to get a new pair and reset the slider
 def _get_new_pair_and_reset_slider():
     #  existing logic to get a new pair
     _get_new_pair()
     # Reset the slider to the default value
-    st.session_state.simplicity_slider = "move the slider"
+    st.session_state.simplicity_slider = "Both texts are actually the same"
 
+
+# For storing the selected likert value as an integer
 # Mapping of textual labels to numerical values
 label_to_value = {
     "I'm very sure the left text is simpler": 0,
     "I'm sure the left text is simpler": 1,
     "I'm pretty sure the left text is simpler": 2,
-    "move the slider": 3,
+    "Both texts are actually the same": 3,
     "I'm pretty sure the right text is simpler": 4,
     "I'm sure the right text is simpler": 5,
     "I'm very sure the right text is simpler": 6
@@ -246,10 +224,11 @@ def _likert():
                     /* Ensure the slider container stretches to full viewport width */
                     div[data-testid="stSlider"] {
                         position: relative;
-                        width: 100vw !important;
+                        width: 200vw !important;
                         left: 50%;
+                        right: 50%;
                         transform: translateX(-50%);
-                        max-width: 90vw !important;
+                        max-width: 1800px !important;
                         padding: 0 !important; /* No padding */
                     }
                     /* Set the tick bar width */
@@ -267,17 +246,17 @@ def _likert():
                     /* Style for likert labels container */
                     .likert-container {
                         width: 100%;
-                        max-width: 80vw;
+                        max-width: 1200px;
                         margin: 0 auto;
-                        top: -20vh;
+                        top: -250px;
                     }
                     .likert-labels {
                         display: flex;
                         justify-content: space-between;
                         width: 100%;
                         color: black;
-                        font-size: 1rem;
-                        margin-bottom: 1vh;
+                        font-size: 20px;
+                        margin-bottom: 10px;
                     }
                 </style>
                 '''
@@ -288,11 +267,32 @@ def _likert():
             "I'm very sure the left text is simpler",
             "I'm sure the left text is simpler",
             "I'm pretty sure the left text is simpler",
-            "move the slider",
+            "Both texts are actually the same",
             "I'm pretty sure the right text is simpler",
             "I'm sure the right text is simpler",
             "I'm very sure the right text is simpler"
         ]
+
+        # Inject custom CSS to change the slider color to blue
+        st.markdown(
+            """
+           <style>
+           .stSlider > label {
+            font-size: 40üx !important;  /* Increase font size of the label */
+            }
+            div[data-baseweb="slider"] > div > div > div {
+            background: #00008B !important;
+            }
+            
+            .StyledThumbValue {
+            color: #00008B !important; 
+            font-size: 16px !important;  /* Increase font size of the thumb value */
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
 
         # Create slider
         simplicity_rating = st.select_slider(
@@ -301,7 +301,6 @@ def _likert():
             format_func=lambda x: f"{x}",
             key="simplicity_slider"
         )
-
         # Get the numerical value corresponding to the selected label
         selected_value = label_to_value[simplicity_rating]
 
@@ -316,23 +315,24 @@ def _likert():
         st.session_state['likert_values'][st.session_state['current_match_id']] = ratings
 
     # Indicate that the likert scale rating has been made
-    st.session_state['likert_made'] = True if selected_value != 3 else False
+    st.session_state['likert_made'] = True
     history = st.session_state['likert_values'].get(st.session_state['current_match_id'], {})
+
 
 # Defining the simplicity guideline
 def _simplicity_guideline():
-    # CSS for container position
+    # CSS für die Anpassung der Container-Position
     css_text = """
     <style>
     .container-left2 {
-        position: absolute;
-        left: -30vw; /* move container to left */
-        width: 20vw;
-        top: -30vh;
+        position: relative;
+        left: -650px; /* move container to left */
+        width:530px;
+        top: -100px;  
     }
     .container-left2  {
-        font-size: 1.2 rem; 
-        border: 1px solid;
+        font-size: 20px; /* Change the text size to 20 */
+        border: 2px solid #001CAD;
     }
     </style>
     """
@@ -356,6 +356,8 @@ def _simplicity_guideline():
             """, unsafe_allow_html=True
         )
 
+
+
 if "name" in st.session_state:
     # User is already logged in
     # Build progress status
@@ -374,51 +376,19 @@ if "name" in st.session_state:
     can_b_text = f"{i_b}: {st.session_state['texts'][i_b].get_text()}"
 
     # Winner is the more complex text. As the user should click on the easier text, the arguments are switched
-    # Display text a and b in columns with increased height and width
-    with tab1:
-        st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_a_text}</div>', unsafe_allow_html=True)
-    with tab2:
-        st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_b_text}</div>', unsafe_allow_html=True)
+    # Switched to non-clickable text areas bc decision will be made with the likert scale:
+    st.text_area("Text A", can_a_text, height=100, key="text_a", disabled=True)
 
-    # Add simplicity guideline
+    st.text_area("Text B", can_b_text, height=100, key="text_b", disabled=True)
+
     _simplicity_guideline()
-
     # Add text above likert scale
     _textlikert()
 
     # Add Likert scale
     _likert()
-
-    # Determine winner based on user's choice
-    # Attempt to retrieve the value of 'simplicity_slider' from st.session_state.
-    # If the key does not exist, default to "move the slider".
-    simplicity_rating = st.session_state.get('simplicity_slider', "move the slider")
-    if simplicity_rating in [
-        "I'm very sure the left text is simpler",
-        "I'm sure the left text is simpler",
-        "I'm pretty sure the left text is simpler"
-    ]:
-        winner = 'a'
-    elif simplicity_rating in [
-        "I'm pretty sure the right text is simpler",
-        "I'm sure the right text is simpler",
-        "I'm very sure the right text is simpler"
-    ]:
-        winner = 'b'
-    else:
-        winner = None
-
-    # Handle scores based on the determined winner
-    if winner == 'a':
-        handle_scores(st.session_state['texts'][st.session_state['can_a']], st.session_state['texts'][st.session_state['can_b']])
-        _update_history('a')
-    elif winner == 'b':
-        handle_scores(st.session_state['texts'][st.session_state['can_b']], st.session_state['texts'][st.session_state['can_a']])
-        _update_history('b')
-
     # Submit button to proceed to next pair of texts
-    # Not able to click, when on "choose" because there would be no winner
-    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "move the slider")
+    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=not st.session_state.get('likert_made', False))
 
 else:
     # User is not logged in yet
@@ -431,10 +401,11 @@ else:
     st.sidebar.text_input("Username", key="login_name")
 
     # type="password" to show input as *****
-    st.sidebar.text_input("Password", key="login_password", type="password")
+    st.sidebar.text_input("Enter Password", key="login_password", type="password")
 
     # Button-click starts login process
     st.sidebar.button("Login", on_click=_login)
+
 
     # Button click starts sign-up process
     st.sidebar.button("Sign-Up", on_click=_sign_up, key="sign_up_button")
