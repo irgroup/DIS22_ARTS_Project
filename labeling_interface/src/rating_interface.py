@@ -329,7 +329,7 @@ def _simplicity_guideline():
         position: absolute;
         left: -30vw; /* move container to left */
         width: 20vw;
-        top: -30vh;
+        top: -52vh;
     }
     .container-left2  {
         font-size: 1.2 rem; 
