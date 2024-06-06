@@ -7,7 +7,7 @@ In diesem Teil des Projekts, geht es darum, wie die Ergebnisse aus der labeling 
 Die Tendenz, Informationen selektiv zu interpretieren oder zu suchen, die die eigenen Vorannahmen oder Überzeugungen bestätigen, und dabei Informationen zu ignorieren, die diesen widersprechen könnten. Dies könnte dazu führen, dass Personen Texte als weniger komplex bewerten, wenn sie ihren eigenen Vorstellungen entsprechen. 
 
 -	**Anchoring Bias:** <br>
-Die Neigung, sich zu stark an einem bestimmten Ausgangspunkt oder Ankerpunkt festzulegen und dann Entscheidungen relativ dazu zu treffen 
+Die Neigung, sich zu stark an einem bestimmten Ausgangspunkt oder Ankerpunkt festzulegen und dann Entscheidungen relativ dazu zu treffen.
 
 ### Forschungsfragen:
 1.	Werden Texte, die auf der linken oder rechten Seite stehen eher angeklickt?
@@ -22,7 +22,7 @@ Die Neigung, sich zu stark an einem bestimmten Ausgangspunkt oder Ankerpunkt fes
     - einen ersten Überblick verschaffen
     - Verteilung der angeklickten Seiten vergleichen mit Goldstandard
         - Wenn man die „richtig“ gewählten Texte abzieht, bleiben dann besonders häufig Texte einer Seite übrig?
-        - Wenn ja, überwiegt die selbe Seite auch bei andern Teilnehmern?
+        - Wenn ja, überwiegt dieselbe Seite auch bei andern Teilnehmern?
         - Ähneln sich die entsprechenden Fragen bei den unterschiedlichen Teilnehmern?
     - Bias in der Textlänge
         - Text-Scoring mit Textlänge vergleichen
@@ -32,8 +32,7 @@ Die Neigung, sich zu stark an einem bestimmten Ausgangspunkt oder Ankerpunkt fes
 <br>
 
 ### Warum sind diese Fragen interessant für das Gesamtprojekt?
--	In dem Gesamtprojekt geht es darum, Texte nach ihrer Komplexität einzuordnen. Das Prüfen auf Biases, kann dafür sorgen, vor Fehlschlüsse zu bewahren. 
--	Indem z. B. erkannt wird, dass häufig Texte einer Seite bevorzugt werden, kann darauf von der Implementierungs-Gruppe reagiert werden und ein Featur eingeführt werden, dass den Teilnehmer dazu bringt seine Auswahl mehr zu reflektieren. Auf der anderen Seite kann nach dem hinzufügen eines solchen Features durch erneute Analyse der selben Biases herausgefunden werden, ob das Feature einen Effekt hatte.  
+In dem Gesamtprojekt geht es darum, Texte nach ihrer Komplexität einzuordnen. Das Prüfen auf Biases, kann dafür sorgen, vor Fehlschlüsse zu bewahren. Indem z. B. erkannt wird, dass häufig Texte einer Seite bevorzugt werden, kann darauf von der Implementierungs-Gruppe reagiert werden und ein Featur eingeführt werden, dass den Teilnehmer dazu bringt seine Auswahl mehr zu reflektieren. Auf der anderen Seite kann nach dem hinzufügen eines solchen Features durch erneute Analyse der selben Biases herausgefunden werden, ob das Feature einen Effekt hatte.  
 
 ---
 ### Weiterführende Überlegungen:
