@@ -10,6 +10,7 @@ import json
 import os.path
 import streamlit.components.v1 as components
 import hashlib
+import random
 
 # login user
 def _login():
@@ -110,12 +111,163 @@ def _update_history(winner):
     st.session_state['selection_made'] = True  # Update selection state
     st.session_state['likert_made'] = False # reset likert scala state
 
+
+# Initialize 'responses' in session state if not already present
+if 'responses' not in st.session_state:
+    st.session_state['responses'] = []
+
+def submit_form():
+    # Update session state to indicate form submission and hide additional questions
+    st.session_state.update({
+        'questionnaire_submitted': True,
+        'show_additional_questions': False
+    })
+    st.session_state.update({'simplicity_slider': 'move the slider'})
+
+    # If there are additional question IDs in session state
+    if 'additional_question_ids' in st.session_state:
+        # Determine user ID
+        user_id = st.session_state['name'] if 'name' in st.session_state else st.session_state['login_name']
+
+        question_1 = st.session_state['current_question_1']
+        answer_1 = st.session_state['selected_answer_1']
+        correct_answer_1 = st.session_state.get('correct_answer_1', '')  
+        text_id_1 = st.session_state['additional_question_ids'][0]
+
+        question_2 = st.session_state['current_question_2']
+        answer_2 = st.session_state['selected_answer_2']
+        correct_answer_2 = st.session_state.get('correct_answer_2', '')  
+        text_id_2 = st.session_state['additional_question_ids'][1]
+
+        # Create response dictionaries for both questions
+        response_1 = {
+            'User-ID': user_id, 'Text-ID': text_id_1, 'Frage': question_1,
+            'Antwort': answer_1, 'richtige_Antwort': correct_answer_1
+        }
+        response_2 = {
+            'User-ID': user_id, 'Text-ID': text_id_2, 'Frage': question_2,
+            'Antwort': answer_2, 'richtige_Antwort': correct_answer_2
+        }
+
+        # Define the path for the CSV file to save responses
+        csv_path = f'/workspace/data/{user_id}_responses.csv'
+        # Check if the CSV file exists
+        if os.path.exists(csv_path):
+            existing_responses_df = pd.read_csv(csv_path, sep=';')
+            # Check if the responses are already saved
+            if (existing_responses_df['Text-ID'] == text_id_1).any() and (existing_responses_df['Text-ID'] == text_id_2).any():
+                st.warning("The answers have already been saved.")
+                return
+
+        # Append responses to session state
+        st.session_state['responses'].append(response_1)
+        st.session_state['responses'].append(response_2)
+
+        # Save responses to CSV creating or appending a new file
+        if os.path.exists(csv_path):
+            existing_responses_df = pd.read_csv(csv_path, sep=';')
+            new_responses_df = pd.DataFrame([response_1, response_2])
+            updated_responses_df = pd.concat([existing_responses_df, new_responses_df], ignore_index=True)
+            updated_responses_df.to_csv(csv_path, index=False, sep=';')
+        else:
+            responses_df = pd.DataFrame([response_1, response_2])
+            responses_df.to_csv(csv_path, index=False, sep=';')
+
+    # Clear additional question data from session state
+    if 'additional_question_ids' in st.session_state:
+        del st.session_state['additional_question_ids']
+    if 'current_question_1' in st.session_state:
+        del st.session_state['current_question_1']
+    if 'current_answers_1' in st.session_state:
+        del st.session_state['current_answers_1']
+    if 'current_question_2' in st.session_state:
+        del st.session_state['current_question_2']
+    if 'current_answers_2' in st.session_state:
+        del st.session_state['current_answers_2']
+    if 'selected_answer_1' in st.session_state:
+        del st.session_state['selected_answer_1']
+    if 'selected_answer_2' in st.session_state:
+        del st.session_state['selected_answer_2']
+
+def _display_additional_questions():
+    # Set the title for the additional questions section
+    st.title("Content-related questions about the last 10 text selections")
+    csv_path = "/workspace/data/MPC-Fragen.csv"
+
+    # Check if the CSV file exists
+    if not os.path.exists(csv_path):
+        st.error(f'The file {csv_path} not found.')
+        return
+    else:
+        # Initialize additional question IDs if not already in session state
+        if 'additional_question_ids' not in st.session_state:
+            df = pd.read_csv(csv_path, delimiter=';')
+            history_ids = list(st.session_state['history'].keys())
+            last_10_matches = history_ids[-10:]
+            text_ids = [st.session_state['history'][match][0][i] for match in last_10_matches for i in range(2)]
+            text_ids = list(set(text_ids))
+            if len(text_ids) < 2:
+                st.error('Not enough unique text IDs for the additional questions.')
+                return
+            st.session_state['additional_question_ids'] = random.sample(text_ids, 2)
+
+        # Read the CSV file with Mcp-questions
+        df = pd.read_csv(csv_path, delimiter=';')
+        
+        # Load and set the first question and answers
+        if 'current_question_1' not in st.session_state or 'current_answers_1' not in st.session_state:
+            question_row_1 = df[df['Text-ID'] == st.session_state['additional_question_ids'][0]].iloc[0]
+            question_1 = question_row_1['Multiple_Choice_Frage']
+            answers_1 = question_row_1[['Antwort_A', 'Antwort_B', 'Antwort_C', 'Antwort_D']].tolist()
+            correct_answer_1 = question_row_1['richtige_Antwort']
+
+            st.session_state['current_question_1'] = question_1
+            st.session_state['current_answers_1'] = answers_1
+            st.session_state['correct_answer_1'] = correct_answer_1
+
+        question_1 = st.session_state['current_question_1']
+        answers_1 = st.session_state['current_answers_1']
+
+        st.write(question_1)
+        selected_answer_1 = st.radio("Please select an answer for question 1:", answers_1, index=None, key='selected_answer_1')
+        
+        # Load and set the second question and answers
+        if 'current_question_2' not in st.session_state or 'current_answers_2' not in st.session_state:
+            question_row_2 = df[df['Text-ID'] == st.session_state['additional_question_ids'][1]].iloc[0]
+            question_2 = question_row_2['Multiple_Choice_Frage']
+            answers_2 = question_row_2[['Antwort_A', 'Antwort_B', 'Antwort_C', 'Antwort_D']].tolist()
+            correct_answer_2 = question_row_2['richtige_Antwort']
+
+            st.session_state['current_question_2'] = question_2
+            st.session_state['current_answers_2'] = answers_2
+            st.session_state['correct_answer_2'] = correct_answer_2 
+
+        question_2 = st.session_state['current_question_2']
+        answers_2 = st.session_state['current_answers_2']
+
+        st.write(question_2)
+        selected_answer_2 = st.radio("Please select an answer for question 2:", answers_2, index=None, key='selected_answer_2')
+
+        # Form to submit answers to additional questions
+        with st.form("Question_form", clear_on_submit=True):
+            st.write("Please answer both questions to continue")
+            submit_button = st.form_submit_button(
+                label='Submit',
+                on_click=submit_form,
+                disabled=not (st.session_state.get('selected_answer_1') and st.session_state.get('selected_answer_2'))
+            )
+
 def _get_new_pair():
     """
     Function is applied after every user decision.
     Sets next candidate pair to the current session state and saves history.
     """
-    st.session_state['current_match_id'] += 1
+    if not st.session_state.get('show_additional_questions', False):
+        st.session_state['current_match_id'] += 1
+
+    if st.session_state['current_match_id'] % 10 == 0:
+        st.session_state['show_additional_questions'] = True
+
     if st.session_state['current_match_id'] >= len(st.session_state['determined_pairs']):
         # user finished labeling
         _save_history()
@@ -360,66 +512,72 @@ def _simplicity_guideline():
 if "name" in st.session_state:
     # User is already logged in
     # Build progress status
-    if 'current_match_id' in st.session_state and 'determined_pairs' in st.session_state:
-        finished = st.session_state['current_match_id']
-        total = len(st.session_state['determined_pairs'])
-        st.header(f'Current status labeling: ({finished + 1}/{total})', divider='gray')
+    if not st.session_state.get('show_additional_questions', False):
+        if 'current_match_id' in st.session_state and 'determined_pairs' in st.session_state:
+            finished = st.session_state['current_match_id']
+            total = len(st.session_state['determined_pairs'])
+            st.header(f'Current status labeling: ({finished + 1}/{total})', divider='gray')
+        else:
+            st.header('Current status labeling:', divider='gray')
+
+    # Check if we need to display additional questions
+    if st.session_state.get('show_additional_questions', False):
+        _display_additional_questions()
+
     else:
-        st.header('Current status labeling:', divider='gray')
+        # Build Interface
+        tab1, tab2 = st.columns(2)
+        i_a, i_b = st.session_state['can_a'], st.session_state['can_b']
 
-    # Build Interface
-    tab1, tab2 = st.columns(2)
-    i_a, i_b = st.session_state['can_a'], st.session_state['can_b']
+        can_a_text = f"{i_a}: {st.session_state['texts'][i_a].get_text()}"
+        can_b_text = f"{i_b}: {st.session_state['texts'][i_b].get_text()}"
 
-    can_a_text = f"{i_a}: {st.session_state['texts'][i_a].get_text()}"
-    can_b_text = f"{i_b}: {st.session_state['texts'][i_b].get_text()}"
+        # Winner is the more complex text. As the user should click on the easier text, the arguments are switched
+        # Display text a and b in columns with increased height and width
+        with tab1:
+            st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_a_text}</div>', unsafe_allow_html=True)
+        with tab2:
+            st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_b_text}</div>', unsafe_allow_html=True)
 
-    # Winner is the more complex text. As the user should click on the easier text, the arguments are switched
-    # Display text a and b in columns with increased height and width
-    with tab1:
-        st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_a_text}</div>', unsafe_allow_html=True)
-    with tab2:
-        st.markdown(f'<div style="border: 1px solid gray; padding: 20px; height: 400px;">{can_b_text}</div>', unsafe_allow_html=True)
+        # Add simplicity guideline
+        _simplicity_guideline()
 
-    # Add simplicity guideline
-    _simplicity_guideline()
+        # Add text above likert scale
+        _textlikert()
 
-    # Add text above likert scale
-    _textlikert()
+        # Add Likert scale
+        _likert()
 
-    # Add Likert scale
-    _likert()
-
-    # Determine winner based on user's choice
-    # Attempt to retrieve the value of 'simplicity_slider' from st.session_state.
-    # If the key does not exist, default to "move the slider".
-    simplicity_rating = st.session_state.get('simplicity_slider', "move the slider")
-    if simplicity_rating in [
-        "I'm very sure the left text is simpler",
-        "I'm sure the left text is simpler",
-        "I'm pretty sure the left text is simpler"
-    ]:
-        winner = 'a'
-    elif simplicity_rating in [
-        "I'm pretty sure the right text is simpler",
-        "I'm sure the right text is simpler",
-        "I'm very sure the right text is simpler"
-    ]:
-        winner = 'b'
-    else:
-        winner = None
+        # Determine winner based on user's choice
+        # Attempt to retrieve the value of 'simplicity_slider' from st.session_state.
+        # If the key does not exist, default to "move the slider".
+        simplicity_rating = st.session_state.get('simplicity_slider', "move the slider")
+        if simplicity_rating in [
+            "I'm very sure the left text is simpler",
+            "I'm sure the left text is simpler",
+            "I'm pretty sure the left text is simpler"
+        ]:
+            winner = 'a'
+        elif simplicity_rating in [
+            "I'm pretty sure the right text is simpler",
+            "I'm sure the right text is simpler",
+            "I'm very sure the right text is simpler"
+        ]:
+            winner = 'b'
+        else:
+            winner = None
 
     # Handle scores based on the determined winner
-    if winner == 'a':
-        handle_scores(st.session_state['texts'][st.session_state['can_a']], st.session_state['texts'][st.session_state['can_b']])
-        _update_history('a')
-    elif winner == 'b':
-        handle_scores(st.session_state['texts'][st.session_state['can_b']], st.session_state['texts'][st.session_state['can_a']])
-        _update_history('b')
+        if winner == 'a':
+            handle_scores(st.session_state['texts'][st.session_state['can_a']], st.session_state['texts'][st.session_state['can_b']])
+            _update_history('a')
+        elif winner == 'b':
+            handle_scores(st.session_state['texts'][st.session_state['can_b']], st.session_state['texts'][st.session_state['can_a']])
+            _update_history('b')
 
     # Submit button to proceed to next pair of texts
     # Not able to click, when on "choose" because there would be no winner
-    st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "move the slider")
+        st.button("Submit", on_click=_get_new_pair_and_reset_slider, disabled=simplicity_rating == "move the slider")
 
 else:
     # User is not logged in yet
@@ -444,5 +602,3 @@ else:
     if 'FormSubmitter:signup_form-Submit' in st.session_state:
         if st.session_state['FormSubmitter:signup_form-Submit']:
             save_user_profile()
-
-

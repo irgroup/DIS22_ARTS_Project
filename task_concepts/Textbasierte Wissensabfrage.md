@@ -7,13 +7,13 @@ Das Projekt
 - Wir wollen durch inhaltliche Wissensabfragen untersuchen, ob ein Muster zu erkennen ist, dass die komplexeren Texte auch inhaltlich als schwerer zu verstehen gelten oder nicht
 
 Methoden
-- Abfrage durch Multiple Choice-Fragen (4 Antwortmöglichkeiten)
-- Freitextantworten
+- Abfrage durch 2 Multiple Choice-Fragen (4 Antwortmöglichkeiten) nach jeweils 10 Sortierungen
 
 Entwicklung der Fragen
 - Fragen werden von Chat GPT generiert und von uns auf Verständlichkeit geprüft
-- Nach jedem 10.-13. Paar, dass man sortiert, soll eine Freitextfrage und eine Multiple Choice Frage gestellt werden
-- Der Nutzer bekommt im Anschluss auf die Beantwortung der Frage ein direktes Feedback über die Richtigkeit seiner Antwort
+- Nach jedem 10. Paar, dass man sortiert, sollen 2 Multiple Choice Fragen gestellt werden
+- Die Antworten werden in einer CSV-Datei gespeichert und können nach der Labelling-Session ausgewertet werden
+- für jeden User wird eine CSV-DAtei (user-id_response.csv) erstellt mit den Spalten: User-ID, Text-ID, Frage, Antwort (vom User ausgewählte Antwort) und richtige Antwort
 
 Was wollen wir für Ergebnisse erzielen?
 
@@ -21,5 +21,3 @@ Was wollen wir für Ergebnisse erzielen?
 - Vermutung: Fragen zu komplexer gerankten Texten sind schwieriger zu beantworten, da komplexe Texte tendenziell mehr Informationen sowie eine höhere Anzahl an relevanten Details liefern, was für den Annotator schwerer zu verarbeiten ist
 - Wir wollen durch die Wissensabfrage herausfinden, ob es ein Muster gibt, bei dem Texte, die im Abschlussranking als komplex geranked werden, weniger Infos vom Nutzer wiedergegeben werden können bzw Fragen richtig beantwortet werden können als bei Texten, die weniger komplex sind
 - Diese Ergebnisse werden analysiert und interpretiert sowie grafisch dargestellt (durch die grafische Darstellung lässt sich eine Abweichung/Überschneidung erkennen)
-- Antworten werden in einer CSV-Datei gesammelt
-- Basierend auf dieser Datei erstellen wir die Auswertungen und Ergebnisse
