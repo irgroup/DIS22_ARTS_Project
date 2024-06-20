@@ -8,3 +8,6 @@ ARTS - Assessing Relative Text Simplicity
 [Code for the Labeling Interface](https://github.com/irgroup/DIS22_ARTS_Project/tree/main/labeling_interface)
 
 [Data - Histories, Scores, English Levels](https://github.com/irgroup/DIS22_ARTS_Project/tree/main/export)
+
+NEW: [Information on Results of Labeling Session 2](https://github.com/irgroup/DIS22_ARTS_Project/about_160_files.md)
+
