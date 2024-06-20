@@ -9,5 +9,5 @@ ARTS - Assessing Relative Text Simplicity
 
 [Data - Histories, Scores, English Levels](https://github.com/irgroup/DIS22_ARTS_Project/tree/main/export)
 
-NEW: [Information on Results of Labeling Session 2](https://github.com/irgroup/DIS22_ARTS_Project/about_160_files.md)
+NEW: [Information on Results of Labeling Session 2](https://github.com/irgroup/DIS22_ARTS_Project/blob/main/about_160_files.md)
 
