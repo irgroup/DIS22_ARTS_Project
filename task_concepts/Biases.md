@@ -2,12 +2,17 @@
 In diesem Teil des Projekts, geht es darum, wie die Ergebnisse aus der labeling Session auf Biases untersucht und welche Erkenntnisse daraus geschöpft werden sollen.
 
 ---
-### Häufig auftretende Biases, die sich in diesem Projekt angesehen werden sollen:
+### Cognitive Biases, die sich in diesem Projekt angesehen werden sollen:
+
 -	**Confirmation Bias:** <br>
 Die Tendenz, Informationen selektiv zu interpretieren oder zu suchen, die die eigenen Vorannahmen oder Überzeugungen bestätigen, und dabei Informationen zu ignorieren, die diesen widersprechen könnten. Dies könnte dazu führen, dass Personen Texte als weniger komplex bewerten, wenn sie ihren eigenen Vorstellungen entsprechen. 
 
--	**Anchoring Bias:** <br>
-Die Neigung, sich zu stark an einem bestimmten Ausgangspunkt oder Ankerpunkt festzulegen und dann Entscheidungen relativ dazu zu treffen.
+-	**Belief perseverance:** <br>
+Das Beharren auf einer hartnäckigen ersten Hypothese, obwohl neue Informationen dieser Überzeugung widersprechen.
+
+-	**Dichotomy:** <br>
+Ein absolutes Denkmuster und eine kognitive Verzerrung, bei dem eine Person Dinge nur in zwei extreme Stufen bzw. Kategorien unterteilt und ignoriert, dass sich dazwischen noch eine Skala von Graustufen befindet. Daher wird auch vom „Alles-Oder-Nichts-Denken“ gesprochen.
+
 
 ### Forschungsfragen:
 1.	Werden Texte, die auf der linken oder rechten Seite stehen eher angeklickt?
