@@ -2,42 +2,68 @@
 In diesem Teil des Projekts, geht es darum, wie die Ergebnisse aus der labeling Session auf Biases untersucht und welche Erkenntnisse daraus geschöpft werden sollen.
 
 ---
-### Cognitive Biases, die sich in diesem Projekt angesehen werden sollen:
-
--	**Confirmation Bias:** <br>
-Die Tendenz, Informationen selektiv zu interpretieren oder zu suchen, die die eigenen Vorannahmen oder Überzeugungen bestätigen, und dabei Informationen zu ignorieren, die diesen widersprechen könnten. Dies könnte dazu führen, dass Personen Texte als weniger komplex bewerten, wenn sie ihren eigenen Vorstellungen entsprechen. 
-
--	**Belief perseverance:** <br>
-Das Beharren auf einer hartnäckigen ersten Hypothese, obwohl neue Informationen dieser Überzeugung widersprechen.
-
--	**Dichotomy:** <br>
-Ein absolutes Denkmuster und eine kognitive Verzerrung, bei dem eine Person Dinge nur in zwei extreme Stufen bzw. Kategorien unterteilt und ignoriert, dass sich dazwischen noch eine Skala von Graustufen befindet. Daher wird auch vom „Alles-Oder-Nichts-Denken“ gesprochen.
-
-
-### Forschungsfragen:
-1.	Werden Texte, die auf der linken oder rechten Seite stehen eher angeklickt?
-2.	Werden längere Texte tendenziell als komplexer eingeschätzt?
-3.	Werden kürzer Texte tendenziell als weniger komplex eingeschätzt?
+## Häufig auftretende Biases, die sich in diesem Projekt angesehen werden sollen:
 <br>
 
-### Herangehensweise:
--	CSV Dateien aus GitHub ziehen
--	in Jupyter Notebook laden
--	`Python` und `pandas` nutzen
-    - einen ersten Überblick verschaffen
-    - Verteilung der angeklickten Seiten vergleichen mit Goldstandard
-        - Wenn man die „richtig“ gewählten Texte abzieht, bleiben dann besonders häufig Texte einer Seite übrig?
-        - Wenn ja, überwiegt dieselbe Seite auch bei andern Teilnehmern?
-        - Ähneln sich die entsprechenden Fragen bei den unterschiedlichen Teilnehmern?
-    - Bias in der Textlänge
-        - Text-Scoring mit Textlänge vergleichen
-        - Texte in kurze, lange und ggf. mittellange Texte kategorisieren 
-        - Kurze Texte des Goldstandards mit dem Score der Rater vergleichen
-            - Werden kurze Texte, die vom Goldstandard als komplex eingeordnet werden, häufig von Teilnehmern als weniger komplex eingestuft?
+**Bias:** <br>
+Confirmation Bias / Belief perseverance / Self-consistensy <br>
+**Forschungsfrage:** <br>
+ Tendieren die Rater dazu, Texte, die in der ersten Runde sehr viel leichter als ihr Vergleichstexte eingestuft wurden, auch weiterhin sehr viel leichter einzustufen, unabhängig vom Vergleichstext? <br>
+**1. Hypothese:** <br>
+Texte, die in der ersten Runde (d. h., wenn Sie das erste Mal gelesen werden) eindeutig leichter eingeschätzt werden, werden in den darauffolgenden Runden tendenziell immer sehr viel leichter eingeschätzt als der Vergleichstext. <br>
+**2. Hypothese:** <br>
+Texte, die in der ersten Runde (d. h., wenn Sie das erste Mal gelesen werden) eindeutig leichter eingeschätzt werden, werden in den darauffolgenden Runden tendenziell nicht mehr sehr viel leichter eingeschätzt als der Vergleichstext. <br>
 <br>
+**Herangehensweise:** <br>
+1.	Nach Texten filtern, die in der ersten Runde die Tendenz 0 oder 6 haben
+2.	Die nächsten Runden nach diesen Texten Filtern
+3.	Prüfen, ob sie weiterhin tendenziell in die extreme eingestuft werden, insbesondere bei Vergleichen zu „leichten“ Texten nach Goldstandard <br>
+<br>
+
+
+**Bias:** <br>
+Dichotomy <br>
+**Forschungsfrage:** <br>
+ Gibt es Rater, die dazu tendieren, vor allem in zwei Stufen auf der Tendenz-Skalar einzuordnen? <br>
+**1. Hypothese:** <br>
+Es gibt Rater, die dazu tendieren, in zwei Kategorien zu denken, also für jede Seite (links und rechts) nur eine Stufe auf der Tendenz-Skalar zu nutzen. <br>
+**2. Hypothese:** <br>
+Es gibt Rater, die dazu tendieren, die zwei Stufen auf der Tendenz-Skalar nicht zu nutzen. <br>
+<br>
+**Herangehensweise:** <br>
+1.	Häufigkeit der gewählten Tendenzen anschauen
+2.	Nach extremen Verteilungen prüfen
+<br>
+<br>
+<br>
+
+**Bias:** <br>
+Unentschlossenheit | Vertrautheitseffekt (Familiarity Effect) / Anchoring Bias / Anpassungs- und Kalibrierungseffekt (Adjustment and Calibration Effect)  <br>
+**Forschungsfrage:** <br>
+Verändert sich die Entschlossenheit der User von Runde zu Runde? (Nutzung der Tendenz-Skalar) <br>
+**1. Hypothese:** <br>
+ Die Unentschlossenheit nimmt pro Rund ab. <br>
+**2. Hypothese:** <br>
+ Die Unentschlossenheit nimmt pro Rund zu. <br>
+<br>
+**Herangehensweise:** <br>
+1.	Rater in Gruppe einordnen:
+    1. Rater, die eine starke Entschlossenheit in Runde 1 aufweisen
+    2. Rater, die kleine starke Entschlossenheit in Runde 1 aufweisen
+2. Pipeline bauen, die die Fragen der 2. Runde bei jedem Rater in eine eiheitliche Reihenfolge bringt
+3. Verlauf der Verteilung der Tendenz-Skalar anschauen
+<br>
+<br>
+<br>
+
+User-Gruppen ansehen
+
+
+
 
 ### Warum sind diese Fragen interessant für das Gesamtprojekt?
-In dem Gesamtprojekt geht es darum, Texte nach ihrer Komplexität einzuordnen. Das Prüfen auf Biases, kann dafür sorgen, vor Fehlschlüsse zu bewahren. Indem z. B. erkannt wird, dass häufig Texte einer Seite bevorzugt werden, kann darauf von der Implementierungs-Gruppe reagiert werden und ein Featur eingeführt werden, dass den Teilnehmer dazu bringt seine Auswahl mehr zu reflektieren. Auf der anderen Seite kann nach dem hinzufügen eines solchen Features durch erneute Analyse der selben Biases herausgefunden werden, ob das Feature einen Effekt hatte.  
+-	In dem Gesamtprojekt geht es darum, Texte nach ihrer Komplexität einzuordnen. Das Prüfen auf Biases, kann dafür sorgen, vor Fehlschlüsse zu bewahren. 
+-	Indem z. B. erkannt wird, dass häufig Texte einer Seite bevorzugt werden, kann darauf von der Implementierungs-Gruppe reagiert werden und ein Featur eingeführt werden, dass den Teilnehmer dazu bringt seine Auswahl mehr zu reflektieren. Auf der anderen Seite kann nach dem hinzufügen eines solchen Features durch erneute Analyse der selben Biases herausgefunden werden, ob das Feature einen Effekt hatte.  
 
 ---
 ### Weiterführende Überlegungen:
