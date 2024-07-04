@@ -9,5 +9,6 @@ ARTS - Assessing Relative Text Simplicity
 
 [Data - Histories, Scores, English Levels](https://github.com/irgroup/DIS22_ARTS_Project/tree/main/export)
 
-NEW: [Information on Results of Labeling Session 2](https://github.com/irgroup/DIS22_ARTS_Project/blob/main/about_160_files.md)
+[Information on Results of Labeling Session 2](https://github.com/irgroup/DIS22_ARTS_Project/blob/main/about_160_files.md)
 
+Hinweis: Die einzelnen Ranking aus der 2. labeling session wurden hochgeladen als "USERNAME-160_ranking.pkl"
