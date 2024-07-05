@@ -12,3 +12,5 @@ ARTS - Assessing Relative Text Simplicity
 [Information on Results of Labeling Session 2](https://github.com/irgroup/DIS22_ARTS_Project/blob/main/about_160_files.md)
 
 Hinweis: Die einzelnen Ranking aus der 2. labeling session wurden hochgeladen als "USERNAME-160_ranking.pkl"
+
+**UPDATE: GOLD SCORES FÜR 2. DURCHGANG SIND ALS "gold_160.pkl" UND "gold_160.csv" VERFÜGBAR**
