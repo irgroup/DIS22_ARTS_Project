@@ -1,46 +1,45 @@
 # Konzept DIS22_ARTS_Project - Logger #
 
-### Momentan erfasste Daten: ###
-- Timestamp (jetzt auch als DateTime) am Click-Event, wenn man den simpleren englischen Text anklickt
+### Erfasste Daten in der History-Datei ###
+- Timestamp (jetzt auch als DateTime) am Click-Event
 - IDs der einzelnen Texte 
 - ID des "Gewinner" Textes (reversed, Gewinner ist der nicht geklickte, "less simple" Text)
 - Username des Nutzers und dessen Englischlevel (Englischlevel extern hinzugefügt)
-- Stand der Fragen im Benutzerprofil
+- Stand der letzten Textauswahl 
 
 ### Userprofil ###
 - Frontend:
-    - Zwischen "Login" und "Sign-Up" unterscheiden
-    - Userprofil Registrierungs-Formular/Maske/Popup
-    - (optional) Userprofil Button wenn eingeloggt um Daten ändern zu können
-- Nutzername (muss unique sein bzw. als PK?):
-    - Wenn sich z.B. jemand mit dem gleichen Usernamen registrieren möchte -> "Nutzername" bereits vergeben
-- relevante Kenntnisstände zu Themen des Text-Korpus:
-    - In Absprache mit Gruppe
-    - checkboxen = true/false in Bezug zu "Biologie", "Gaming" etc. 
-- Englisch-Level für neue User
-    - string = "B2.2", "C1.1" (Vllt Listbox um Eingabe besser zu validieren?)
+    - 2 verschieden Button:
+        - "Login" -> startet Login Prozess und prüft ob die Kombination aus Username und Passwort übereinstimmt
+        - "Sign-Up" -> startet das Sign-Up Formular, bei welchem man seine Daten hinterlegen kann
+            - Falls die Daten im Sign-Up Formular nicht vollständig sind, wird das Userprofil nicht gespeichert und es erscheint eine Fehlermeldung
+    - (nicht implementiert) Userprofil Button wenn eingeloggt um Daten ändern zu können
+- Username:
+    - Muss Unique sein, deswegen wird geprüft, ob es eine Datei: "username.json" bereits gibt
+    - Falls der Username bereits vorhanden ist, wird eine Fehlermeldung angezeigt
+- Relevante Kenntnisstände zu Themen des Text-Korpus:
+    - (nicht implementiert) nicht im Userprofil, da in einem Google-Docs Fragebogen erfasst, könnten aber nachträglich manuell ergänzt werden 
+- Englisch-Level:
+    - string = "B2.2", "C1.1" 
+    - Als Streamlit Selectbox implementiert, damit es nur begrenzte und gleich formatierte Eingaben gibt
 - Alter
     - Integer = 26
+    - Als Streamlit number_input implementiert, um einen numerischen Wert zu gewährleisten ,mit einem Interval von 1, sowie nur Ganzzahlen
 - Geschlecht
-    - char = "m", "w", "d"
-- Datenschutz akzeptieren beim Sign-Up (Checkbox)
-- User "Datenbank":
-    - momentan als Pickle (Binary -> nicht lesbar für Menschen)
-    - JSON/CSV würde auch Sinn ergeben, da man mit diesen direkt arbeiten kann ohne Hilfscript
+    - string = "Male", "Female", "Diverse"
+    - Ebenfalls als Streamlit Selectbox implementiert, damit es nur begrenzte und gleich formatierte Eingaben gibt
+- User Profil Dateien:
+    - Jeder User hat eine JSON-Datei, in welcher alle Informationen festgehalten werden, Name der Datei = username.json  
 - Passwort Management:
-    - Nutzername und Passwort zum Login notwendig
-    - Passwort asymetrisch verschlüsselt (Hash)
-    - (optional) Passwortrichtlinien
-    - (optional) Passwort vergessen
-- (optional) Wie viele komplette Durchläufe hatte der Nutzer bereits
-
-### Wissensabfragen/Lückentexte/Fragemodalitäten ###
-- Lückentexte und Fragen müssen mit der jeweiligen TextID im Repository abgelegt werden
-- In Absprache mit Gruppe:
-    - Wie werden diese im Frontend dargestellt?
-    - Wie funktioniert die Auswertung von diesen?
-        - Username, TextID, Lückentext/Wissenabfrage Ergebnis (csv?)
-
+    - Passwort asymetrisch verschlüsselt (Hash), mit Sha256 Algorithmus
+    - (nicht implementiert) Passwortrichtlinien
+    - (nicht implementiert) Passwort vergessen Funktion, da es dafür eine Mail-Funktionalität geben müsste
+- Erweiterbarkeit:
+    - Es sollte sehr einfach sein, zusätzliche Daten im Sign-Up Formular zu erfassen oder an das Userprofil zu schreiben
+- (nicht implementiert) Datenschutz akzeptieren beim Sign-Up (Checkbox)
+ 
+### Wissensabfragen/Lückentexte/Fragemodalitäten (Wissensabfragen-Gruppe) ###
+- Hilfestellung für die Gruppe, wie man die Daten ablegt und die Antworten der Wissensabfragen speichert
 
 ### Konfidenzintervall/Likert-Skala ###
 - Als neuer Key am Dictionary bzw. als neue Column an der .csv Datei:
@@ -66,17 +65,17 @@
 __________________________________________________________________________________________
 __________________________________________________________________________________________
 
-### Optionale logging Möglichkeiten ###
-- Um Mouse-Events zu tracken, müsste man um das Streamlit-Framework herum programmieren, daher sehr aufwendig:
+### Verworfene logging Möglichkeiten ###
+- Um Mouse-Events zu tracken, müsste man um das Streamlit-Framework herum programmieren, daher zu aufwendig:
     - [mouseover Event](https://www.w3schools.com/jsref/event_onmouseover.asp)
     - [mousemove Event](https://www.w3schools.com/jsref/event_onmousemove.asp)
     - [mouseleave Event](https://www.w3schools.com/jsref/event_onmouseleave.asp)
     - [Mouse behavioral patterns and keystroke dynamics in End-User
     Development: What can they tell us about users’ behavioral attributes?](https://doi.org/10.1016/j.chb.2018.02.012)
-- Klassische Logging values: Mögliche Fehlermeldungen/Application Errors oder Debug Messages?
+- Klassische Logging values: Mögliche Fehlermeldungen/Application Errors oder Debug Messages? -> unnötig da die Anwendung nicht so komplex ist
 __________________________________________________________________________________________
 __________________________________________________________________________________________
-### Zeitplan ###
+### Zeitplan -> abgeschlossen ###
 
 - Themen Grundgerüst fertig (Viki + Zoe):
   - Konfidenzintervall/Likert-Skala bis 30.05 (Viki + Zoe)
@@ -96,21 +95,16 @@ ________________________________________________________________________________
  
 __________________________________________________________________________________________
 __________________________________________________________________________________________
-### Breich für Fragen und Notizen von anderen Gruppen ###
-- Gibt es dort, wo die einzelnen Texte abgelegt sind auch die Vergleichswerte wie Fleiss/Cohen
-Kappa, Krippendorf Alpha?
-__________________________________________________________________________________________
-__________________________________________________________________________________________
 
 ### Kontakt ###
 Marvin Weihrauch 
-Email: marvin_benedikt.weihrauch@smail.th-koeln.de
-Matrikelnummer: 11154518
+- Email: marvin_benedikt.weihrauch@smail.th-koeln.de
+- Matrikelnummer: 11154518
 
 Viktoria Hellmann
-Email: viktoria_dora_lotte.hellmann@smail.th-koeln.de
-Matrikelnummer: 11154077
+- Email: viktoria_dora_lotte.hellmann@smail.th-koeln.de
+- Matrikelnummer: 11154077
 
 Zoe Bartz
-Email: zoe_bernadette.bartz@smail.th-koeln.de
-Matrikelnummer: 11153679
+- Email: zoe_bernadette.bartz@smail.th-koeln.de
+- Matrikelnummer: 11153679
