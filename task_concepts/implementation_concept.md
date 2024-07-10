@@ -43,24 +43,20 @@
 
 ### Konfidenzintervall/Likert-Skala ###
 - Als neuer Key am Dictionary bzw. als neue Column an der .csv Datei:
-    - Werte zwischen.... (Absprache mit Gruppe)
-    - Skala wird aussehen (research based): "stimme sehr zu", "stimme eher zu", "teils-teils", "stimme eher nicht zu" und "stimme überhaupt nicht zu" → dadurch eindimensionale Likert-Skala (Quelle: https://www.ssoar.info/ssoar/handle/document/20886)
+    - Skala sieht wie folgt aus: "I'm very sure the left text is simpler": 0,
+    "I'm sure the left text is simpler": 1,
+    "I'm pretty sure the left text is simpler": 2,
+    "move the slider": 3,
+    "I'm pretty sure the right text is simpler": 4,
+    "I'm sure the right text is simpler": 5,
+    "I'm very sure the right text is simpler": 6
 - Skala wird mit Schieberegler hinterlegt werden 
-- zusätzlich kann diese farbig angepasst werden, nur aufpassen, hierdurch keinen bias zu geben 
-- Skala ist grundlegend implementiert, muss aber noch auf jeder Seite/bei jeder Frage neu initialisiert werden 
 - Implementation eines Weiter-Buttons, damit erst nach Auswahl des Textes und der Likert-Skala zur nächsten Frage gesprungen werden kann
-- Ich bin mir sicher, dass der linke/rechte Text einfacher ist + Unsicher
-
-### Reihenfolge der Text-Pairings ###
-- Wie wird die Text-Pairing Reihenfolge bestimmt?
-    - Abhängig von Englischlevel/Kenntnisstand etc.?
-    - TextID1, TextID2?
 
 ### Design ###
 - Lesbarkeit der Fragen durch Anpassen der Text- und Hintergrundfarben verbessern
-- "Click on the text which is easier to understand" Überschrift mit Fokus auf easier
-- Slider von der linken Seite auf die rechte Seite der Übersicht ziehen
-- Möglicherweise mit Farbablauf von grün nach Rot
+- Überschrift geändert zu Fortschrittsanzeige: Current status labeling: xx
+- Skala unter Fragen, Weiter-Button als ganz nach Unten
 - Startseite/Übersichtseite: Anmeldefunktion kommt in die Mitte.
 __________________________________________________________________________________________
 __________________________________________________________________________________________
@@ -92,6 +88,8 @@ ________________________________________________________________________________
     - 'current_match_id' aus der history, ins Userprofil übernehmen
     - Kenntnisstände zu themen im Userprofil? (Sinnvoll?)
     - Ablage der Wissensabfragen
+   
+- Themen rund um Skala und Design abgeschlossen und funktional
  
 __________________________________________________________________________________________
 __________________________________________________________________________________________
