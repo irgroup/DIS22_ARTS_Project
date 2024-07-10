@@ -21,3 +21,5 @@ Was wollen wir für Ergebnisse erzielen?
 - Vermutung: Fragen zu komplexer gerankten Texten sind schwieriger zu beantworten, da komplexe Texte tendenziell mehr Informationen sowie eine höhere Anzahl an relevanten Details liefern, was für den Annotator schwerer zu verarbeiten ist
 - Wir wollen durch die Wissensabfrage herausfinden, ob es ein Muster gibt, bei dem Texte, die im Abschlussranking als komplex geranked werden, weniger Infos vom Nutzer wiedergegeben werden können bzw Fragen richtig beantwortet werden können als bei Texten, die weniger komplex sind
 - Diese Ergebnisse werden analysiert und interpretiert sowie grafisch dargestellt (durch die grafische Darstellung lässt sich eine Abweichung/Überschneidung erkennen)
+
+Mario Mitgutsch (11154085) Sebastian Mörs (11155429)
