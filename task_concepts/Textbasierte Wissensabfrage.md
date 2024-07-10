@@ -13,7 +13,7 @@ Entwicklung der Fragen
 - Fragen werden von Chat GPT generiert und von uns auf Verständlichkeit geprüft
 - Nach jedem 10. Paar, dass man sortiert, sollen 2 Multiple Choice Fragen gestellt werden
 - Die Antworten werden in einer CSV-Datei gespeichert und können nach der Labelling-Session ausgewertet werden
-- für jeden User wird eine CSV-DAtei (user-id_response.csv) erstellt mit den Spalten: User-ID, Text-ID, Frage, Antwort (vom User ausgewählte Antwort) und richtige Antwort
+- für jeden User wird eine CSV-Datei (user-id_response.csv) erstellt mit den Spalten: User-ID, Text-ID, Frage, Antwort (vom User ausgewählte Antwort) und richtige Antwort
 
 Was wollen wir für Ergebnisse erzielen?
 
