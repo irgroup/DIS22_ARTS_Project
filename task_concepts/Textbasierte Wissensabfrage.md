@@ -7,7 +7,7 @@ Das Projekt
 - Wir wollen durch inhaltliche Wissensabfragen untersuchen, ob ein Muster zu erkennen ist, dass die komplexeren Texte auch inhaltlich als schwerer zu verstehen gelten oder nicht
 
 Methoden
-- Abfrage durch 2 Multiple Choice-Fragen (4 Antwortmöglichkeiten) nach jeweils 10 Sortierungen
+- Abfrage durch 2 Multiple Choice-Fragen (4 Antwortmöglichkeiten mit jeweils nur einer korrekten Antwort) nach jeweils 10 Sortierungen
 
 Entwicklung der Fragen
 - Fragen werden von Chat GPT generiert und von uns auf Verständlichkeit geprüft
